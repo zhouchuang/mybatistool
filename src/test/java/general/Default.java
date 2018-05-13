@@ -5,13 +5,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import user.zc.models.base.Permission;
-import user.zc.models.base.Role;
-import user.zc.models.base.User;
-import user.zc.service.base.PermissionService;
-import user.zc.service.base.RoleService;
-import user.zc.service.base.UserService;
-import user.zc.utils.MD5Tools;
+import user.zchp.models.base.Permission;
+import user.zchp.models.base.Role;
+import user.zchp.models.base.User;
+import user.zchp.service.base.PermissionService;
+import user.zchp.service.base.RoleService;
+import user.zchp.service.base.UserService;
+import user.zchp.utils.MD5Tools;
 
 /**
  * 生成默认账号

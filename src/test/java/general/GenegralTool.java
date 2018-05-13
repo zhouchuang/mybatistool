@@ -1,8 +1,8 @@
 package general;
 
 
-import user.zc.service.base.DictCacheService;
-import user.zc.utils.StringUtils;
+import user.zchp.service.base.DictCacheService;
+import user.zchp.utils.StringUtils;
 
 import java.io.*;
 import java.lang.reflect.Field;

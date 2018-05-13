@@ -8,49 +8,70 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <body>
-<%--<div class="btn-group-vertical" role="group" aria-label="...">
-    <script id="tables" type="text/html" data-url="/TableController/TableList?database=tool">
-        {{each list as table}}
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{table}}
-            </button>
-            <ul class="dropdown-menu">
+<style>
+    ul{
+        list-style:none;
+    }
+</style>
+
+
+<div class="container-fluid">
+    <button type="button" id="add" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-sm">新增</button>
+    <button type="button" id="del" class="btn btn-danger">删除</button>
+</div>
+
+<div class="container" style="margin-top: 20px;">
+    <ul id="tree" style="margin-left: 15px;">
+    </ul>
+</div>
+
+<div id="tablepanel" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content" >
+            <ul class="list-group" id="tables">
 
             </ul>
         </div>
-        {{/each}}
-    </script>
-</div>--%>
-<div class="container-fluid">
-    <div class="row">
-        <button>事实上</button>
-        <button>事实上</button>
-        <button>事实上</button>
-
-        <button>事实上</button><button>事实上</button>
-        <button>事实上</button><button>事实上</button>
-        <button>事实上</button><button>事实上</button>
-        <button>事实上</button><button>事实上</button>
-        <button>事实上</button><button>事实上</button>
-        <button>事实上</button><button>事实上</button>
     </div>
 </div>
 <script>
-    /*$("#tables").loadData().then(function(result){
-        $(".btn-group-vertical").on('click','button',function(){
-            var _this = $(this);
-            if(_this.next().children().length==0){
-                $.getJSON('/TableController/FieldList?table='+_this.text(),function(data){
-                    var html  = "";
-                    $.each(data.data,function(i,item){
-                        html += "<li><a href=\"javascript:void(0)\">"+item.Field+"</a></li>";
-                    });
-                    _this.next().html(html);
+    var tablelist = [];
+    var template = "<li><input type=\"checkbox\" value=\"@{name}\" ><label>@{name}</label></li>";
+    $('#add').click(function(){
+        new Promise(function(callback){
+            if(tablelist.length==0) {
+                $.getJSON("/TableController/TableList?database=tool",function(data){
+                    tablelist = [].concat(data.data);
+                    callback(tablelist);
                 });
+            }else{
+                callback(tablelist);
             }
+        }).then(function(result){
+            var html = "";
+            for(var key in result){
+                html += "<li class=\"list-group-item\">"+result[key]+"</li>";
+            }
+            $("#tables").html(html);
+        }).then(function () {
+            $("#tables").on('click','li',function () {
+                var _this = $(this);
+                var table = $(this).text();
+                var lihtml  =  template.replace("@{name}",table).replace("@{name}",table);
+                $("#tree").append(lihtml);
+                $.getJSON("/TableController/FieldList?table="+table,function (data) {
+                    data = data.data;
+                    var html = "";
+                    for(var key in data){
+                        html  += template.replace("@{name}",data[key].Field).replace("@{name}",data[key].Field);
+                    }
+                    $("#tree li:last").append("<ul>"+html+"</ul>");
+
+                });
+                $("#tablepanel").modal('hide');
+            });
         });
-    });*/
+    });
 </script>
 </body>
 </html>

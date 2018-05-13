@@ -1,1 +1,0 @@
-package user.zc.dao.base;public interface SearchlogDao extends Dao {}

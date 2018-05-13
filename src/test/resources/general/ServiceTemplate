@@ -1,7 +1,7 @@
 package ${packageName}.service;
 
-import user.zc.dao.${className}Dao;
-import user.zc.service.base.AbstractService;
+import user.zchp.dao.${className}Dao;
+import user.zchp.service.base.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

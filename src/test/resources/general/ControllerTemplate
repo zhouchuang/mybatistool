@@ -1,9 +1,9 @@
 package ${packageName}.controller;
 
 
-import user.zc.controller.base.BaseController;
-import user.zc.models.PageParam;
-import user.zc.models.QueryParam;
+import user.zchp.controller.base.BaseController;
+import user.zchp.models.PageParam;
+import user.zchp.models.QueryParam;
 import ${packageName}.models.${className};
 import ${packageName}.service.${className}Service;
 import user.zc.utils.Result;

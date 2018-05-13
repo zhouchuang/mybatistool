@@ -1,7 +1,7 @@
 package general;
 
 
-import user.zc.models.base.User;
+import user.zchp.models.base.User;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;

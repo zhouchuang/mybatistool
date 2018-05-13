@@ -3,7 +3,7 @@ package ${packageName}.dao;
 
 import java.util.HashMap;
 import java.util.List;
-import user.zc.models.PageParam;
+import user.zchp.models.PageParam;
 
 public interface ${className}Dao extends Dao {
 
