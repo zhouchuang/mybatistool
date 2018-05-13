@@ -12,32 +12,63 @@
     ul{
         list-style:none;
     }
+    .show{
+        display: block;
+    }
+    .hide{
+        display: none;
+    }
 </style>
 
 
 <div class="container-fluid">
-    <button type="button" id="add" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-sm">新增</button>
+    <button type="button" id="add" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-lg">新增</button>
     <button type="button" id="del" class="btn btn-danger">删除</button>
+    <button type="button" id="gen" class="btn btn-primary">生成</button>
+
 </div>
 
-<div class="container" style="margin-top: 20px;">
+<div class="container" style="margin-top: 20px;height: 90%;overflow-y: auto">
     <ul id="tree" style="margin-left: 15px;">
     </ul>
 </div>
 
-<div id="tablepanel" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content" >
-            <ul class="list-group" id="tables">
+<div id="tablepanel" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" id="title">请选择表后再选择关联列</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="list-group col-md-6" id="tables">
 
-            </ul>
+                </ul>
+                <ul class="list-group col-md-6" id="fields">
+
+                </ul>
+            </div>
         </div>
+
+
+
     </div>
 </div>
 <script>
     var tablelist = [];
-    var template = "<li><input type=\"checkbox\" value=\"@{name}\" ><label>@{name}</label></li>";
+    var tabletemplate = "<li class=\"tablename\" ><input type=\"checkbox\" value=\"@{name}\" data-id=\"@{id}\" data-ref=\"@{ref}\"  ><label >@{name}</label></li>";
+    var fieldtemplate = "<li><input type=\"checkbox\" value=\"@{name}\" ><label style='color:#909090'>@{name}</label></li>";
     $('#add').click(function(){
+        var ches = $("#tree input:checked");
+        var appendDom  = $("#tree") ;
+        var id ;
+        var refId;
+        if(ches.length==0){
+            $("#title").text("请选择关联id后点击添加");
+        }else{
+            id = ches.last().val();
+            appendDom = ches.last().closest("ul");
+            $("#title").text("关联对象 "+ches.last().closest("ul").prev().text()+"("+ches.last().val()+")");
+        }
         new Promise(function(callback){
             if(tablelist.length==0) {
                 $.getJSON("/TableController/TableList?database=tool",function(data){
@@ -57,21 +88,64 @@
             $("#tables").on('click','li',function () {
                 var _this = $(this);
                 var table = $(this).text();
-                var lihtml  =  template.replace("@{name}",table).replace("@{name}",table);
-                $("#tree").append(lihtml);
                 $.getJSON("/TableController/FieldList?table="+table,function (data) {
                     data = data.data;
+                    var fieldhtml = "";
                     var html = "";
                     for(var key in data){
-                        html  += template.replace("@{name}",data[key].Field).replace("@{name}",data[key].Field);
+                        fieldhtml +=  "<li class=\"list-group-item\">"+data[key].Field+"</li>";
+                        html  += fieldtemplate.replace("@{name}",data[key].Field).replace("@{name}",data[key].Field);
                     }
-                    $("#tree li:last").append("<ul>"+html+"</ul>");
-
+                    $("#fields").html(fieldhtml);
+                    $("#fields").off("click");
+                    $("#fields").on('click','li',function(){
+                        refId = $(this).text();
+                        var lihtml  =  tabletemplate.replace("@{name}",table).replace("@{name}",util.getFirstUp(table)).replace("@{id}",id).replace("@{ref}",refId);
+                        appendDom.append(lihtml+"<ul>"+html+"</ul>");
+                        initTree();
+                    });
                 });
-                $("#tablepanel").modal('hide');
             });
         });
     });
+
+    function initTree(){
+        $("#tablepanel").modal('hide');
+        $("#tree input:checked").prop("checked",false);
+    }
+
+    $("#del").click(function(){
+       $("#tree input:checked").each(function(i,item){
+           $(this).parent().remove();
+       });
+    });
+    
+    $("#tree").on('click',"li[class='tablename']",function () {
+        $(this).next().toggleClass("hide",1000);
+    });
+    
+    $("#gen").click(function () {
+        var lefttable =  $("#tree ul:first li[class='tablename']");
+        var leftjoinstr = "from "+ $("#tree li:first").children("input:first").val();
+        console.log(generalleftjoin([lefttable],leftjoinstr));
+    });
+
+    function generalleftjoin(tables,str){
+        for(var index in tables){
+            var table = tables[index];
+            var lefttable = table.parent().prev().children("input:first");
+            var righttable = table.children("input:first");
+            str += " left join "+righttable.val()+" on  "+lefttable.val()+"."+righttable.data("id")+" = "+righttable.val()+"."+righttable.data("ref");
+        }
+        var childs =  tables[0].next().children("li[class='tablename']");
+        console.log(childs);
+        if(childs.length>0){
+            return generalleftjoin(childs,str);
+        }else{
+            return str;
+        }
+
+    }
 </script>
 </body>
 </html>

@@ -41,6 +41,9 @@
         }
 
     },
+    getFirstUp:function(str){
+        return str.substring(0,1).toLocaleUpperCase()+str.substring(1,str.length);
+    },
     isArray:function(o){
         return Object.prototype.toString.call(o)=='[object Array]';
     },
