@@ -125,27 +125,27 @@
     });
     
     $("#gen").click(function () {
-        var lefttable =  $("#tree ul:first li[class='tablename']");
-        var leftjoinstr = "from "+ $("#tree li:first").children("input:first").val();
-        console.log(generalleftjoin([lefttable],leftjoinstr));
+        var lefttables =  $("#tree ul:first li[class='tablename']");
+        var sql = "from "+ $("#tree li:first").children("input:first").val();
+        generalleftjoin(lefttables);
+        console.log(sql);
+
+        function generalleftjoin(tables){
+            console.log(tables.length);
+            tables.each(function(index,item){
+                var table = $(item);
+                var lefttable = table.parent().prev().children("input:first");
+                var righttable = table.children("input:first");
+                sql += " left join "+righttable.val()+" on  "+lefttable.val()+"."+righttable.data("id")+" = "+righttable.val()+"."+righttable.data("ref");
+                var childs =  table.next().children("li[class='tablename']");
+                if(childs.length>0){
+                    generalleftjoin(childs);
+                }
+            });
+        }
     });
 
-    function generalleftjoin(tables,str){
-        for(var index in tables){
-            var table = tables[index];
-            var lefttable = table.parent().prev().children("input:first");
-            var righttable = table.children("input:first");
-            str += " left join "+righttable.val()+" on  "+lefttable.val()+"."+righttable.data("id")+" = "+righttable.val()+"."+righttable.data("ref");
-        }
-        var childs =  tables[0].next().children("li[class='tablename']");
-        console.log(childs);
-        if(childs.length>0){
-            return generalleftjoin(childs,str);
-        }else{
-            return str;
-        }
 
-    }
 </script>
 </body>
 </html>
