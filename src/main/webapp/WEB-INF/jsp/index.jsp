@@ -43,6 +43,9 @@
     </script>
 </head>
 <body >
+<div id="alertPanel" class="alert alert-warning alert-dismissible" role="alert" style="display: none;position: fixed;z-index: 999;width: 100%;top: 0px;">
+    <strong>警告!</strong><span><span>
+</div>
 <div class="row" style="width: 90%;margin:10px auto;">
     <div class="col-md-3">
         <jsp:include page="menu.jsp"/>
@@ -58,6 +61,7 @@
 <script src="/static/js/template.js"></script>
 <script src="/static/js/templateUtils.js"></script>
 <script src="/static/js/util.js"></script>
+<script src="/static/js/bootstraputil.js"></script>
 <script>
 
     $(".list-group").on('click','a',function () {

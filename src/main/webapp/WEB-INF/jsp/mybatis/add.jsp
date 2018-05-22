@@ -21,11 +21,10 @@
 </style>
 
 
-<div class="container-fluid">
+<div class="container-fluid" style="padding-left: 0px;!important;" >
     <button type="button" id="add" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-lg">新增</button>
     <button type="button" id="del" class="btn btn-danger">删除</button>
     <button type="button" id="gen" class="btn btn-primary">生成</button>
-
 </div>
 
 <div class="container" style="margin-top: 20px;height: 90%;overflow-y: auto">
@@ -49,8 +48,6 @@
             </div>
         </div>
 
-
-
     </div>
 </div>
 <script>
@@ -58,16 +55,21 @@
     var tabletemplate = "<li class=\"tablename\" ><input type=\"checkbox\" value=\"@{name}\" data-id=\"@{id}\" data-ref=\"@{ref}\"  ><label >@{name}</label></li>";
     var fieldtemplate = "<li><input type=\"checkbox\" value=\"@{name}\" ><label style='color:#909090'>@{name}</label></li>";
     $('#add').click(function(){
-        var ches = $("#tree input:checked");
+        addTable();
+    });
+
+    function addTable(comp){
+        var last = comp||$("#tree input:checked").last();
         var appendDom  = $("#tree") ;
         var id ;
         var refId;
-        if(ches.length==0){
-            $("#title").text("请选择关联id后点击添加");
+        if(last==undefined || last.length==0){
+//            $("#title").text("请选择关联id后点击添加");
+            bttool.alert("请选择关联id后点击添加");
         }else{
-            id = ches.last().val();
-            appendDom = ches.last().closest("ul");
-            $("#title").text("关联对象 "+ches.last().closest("ul").prev().text()+"("+ches.last().val()+")");
+            id = last.val();
+            appendDom = last.closest("ul");
+            $("#title").text("关联对象 "+last.closest("ul").prev().text()+"("+last.val()+")");
         }
         new Promise(function(callback){
             if(tablelist.length==0) {
@@ -107,8 +109,7 @@
                 });
             });
         });
-    });
-
+    }
     function initTree(){
         $("#tablepanel").modal('hide');
         $("#tree input:checked").prop("checked",false);
@@ -122,6 +123,10 @@
     
     $("#tree").on('click',"li[class='tablename']",function () {
         $(this).next().toggleClass("hide",1000);
+    });
+
+    $("#tree").on('change','input:checked',function(){
+        addTable($(this));
     });
     
     $("#gen").click(function () {
