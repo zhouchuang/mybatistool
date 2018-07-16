@@ -24,7 +24,7 @@
 <div class="container-fluid" style="padding-left: 0px;!important;" >
     <button type="button" id="add" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-lg">新增</button>
     <button type="button" id="del" class="btn btn-danger">删除</button>
-    <button type="button" id="gen" class="btn btn-primary">生成</button>
+    <button type="button" id="gen" class="btn btn-primary" data-url="/TableController/generalDao">生成</button>
 </div>
 
 <div class="container" style="margin-top: 20px;height: 90%;overflow-y: auto">
@@ -130,24 +130,41 @@
     });
     
     $("#gen").click(function () {
-        var lefttables =  $("#tree ul:first li[class='tablename']");
-        var sql = "from "+ $("#tree li:first").children("input:first").val();
-        generalleftjoin(lefttables);
-        console.log(sql);
-
-        function generalleftjoin(tables){
-            console.log(tables.length);
+        var firsttables =  $("#tree>li[class='tablename']");
+        function generalLeftTable(tables){
+            var lefttables = [];
             tables.each(function(index,item){
-                var table = $(item);
-                var lefttable = table.parent().prev().children("input:first");
-                var righttable = table.children("input:first");
-                sql += " left join "+righttable.val()+" on  "+lefttable.val()+"."+righttable.data("id")+" = "+righttable.val()+"."+righttable.data("ref");
-                var childs =  table.next().children("li[class='tablename']");
-                if(childs.length>0){
-                    generalleftjoin(childs);
+                var tableDom = $(item);
+                var table = {
+                    tableName:tableDom.children("input").val(),
+                    fields:getFieldlist(tableDom)
                 }
+                var childs =  tableDom.next("ul").children("li[class='tablename']");
+                if(childs.length>0){
+                    table.leftTables =  generalLeftTable(childs);
+                }
+                var lefttable = {
+                    refId:tableDom.children("input").data("id"),
+                    revId:tableDom.children("input").data("ref"),
+                    table:table
+                }
+                lefttables.push(lefttable);
             });
+            return lefttables;
         }
+        function getFieldlist(tableDom){
+            var fields = [];
+            tableDom.next("ul").children("li:not([class='tablename'])").each(function(index,item){
+                fields.push({key:$(item).children("input").val()});
+            });
+            return fields;
+        }
+        var lefttable = generalLeftTable(firsttables);
+        console.log(lefttable);
+        $(this).btPost(lefttable,function(result){
+
+        })
+
     });
 
 
