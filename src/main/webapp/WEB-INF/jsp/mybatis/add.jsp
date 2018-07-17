@@ -160,14 +160,11 @@
             return fields;
         }
         var lefttable = generalLeftTable(firsttables);
-        console.log(lefttable);
-        $(this).btPost(lefttable,function(result){
+        $(this).btPost(lefttable[0],function(result){
 
         })
 
     });
-
-
 </script>
 </body>
 </html>
