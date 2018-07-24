@@ -8,4 +8,5 @@ package user.zchp.general.pipeline;
  */
 public class Console {
     //this is dev branch edit
+    //this is second edit
 }
