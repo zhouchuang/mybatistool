@@ -1,4 +1,4 @@
-package user.zchp.models;
+package user.zchp.general.component;
 
 import lombok.Data;
 

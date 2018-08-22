@@ -6,5 +6,9 @@ package user.zchp.general.pipeline;
  * @author zhouchuang
  * @create 2018-07-17 23:03
  */
-public class FileExport {
+public class FileExport implements Pipeline{
+    @Override
+    public void process() {
+
+    }
 }

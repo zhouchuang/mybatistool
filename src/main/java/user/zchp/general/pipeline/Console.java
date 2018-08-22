@@ -6,9 +6,11 @@ package user.zchp.general.pipeline;
  * @author zhouchuang
  * @create 2018-07-17 23:02
  */
-public class Console {
-    //this is dev branch edit
-    //this is second edit
-    //this is dev edit
-    // this is master edit
+public class Console implements Pipeline{
+    @Override
+    public void process(StringBuffer stringBuffer) {
+        System.out.println("=========sql start==========");
+        System.out.println(stringBuffer.toString());
+        System.out.println("=========sql ends==========");
+    }
 }

@@ -1,11 +1,11 @@
 package user.zchp.general.pipeline;
 
 /**
- * 通道，是保存到文件，还是控制台输出
+ * 输出通道，可以有多个
  *
  * @author zhouchuang
- * @create 2018-07-17 22:55
+ * @create 2018-08-22 21:48
  */
-public class Pipeline {
-
+public interface Pipeline {
+    public void process(StringBuffer stringBuffer);
 }

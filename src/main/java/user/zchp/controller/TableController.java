@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import user.zchp.models.LeftTable;
+import user.zchp.general.Machine;
+import user.zchp.general.pipeline.Console;
+import user.zchp.general.process.DemoTableProcess;
+import user.zchp.general.component.LeftTable;
 import user.zchp.service.base.TableService;
 import user.zchp.utils.Result;
 
@@ -55,6 +58,9 @@ public class TableController {
     @ResponseBody
     public Result generalDao(@RequestBody LeftTable leftTable){
         Result result = new Result();
+        Machine.create(new DemoTableProcess())
+        .addPiplineList(new Console())
+        .run();
         return result;
     }
 
