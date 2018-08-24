@@ -8,7 +8,7 @@ package user.zchp.general.pipeline;
  */
 public class FileExport implements Pipeline{
     @Override
-    public void process() {
+    public void process(StringBuffer stringBuffer) {
 
     }
 }
