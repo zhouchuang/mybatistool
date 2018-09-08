@@ -7,4 +7,5 @@ package user.zchp.general.assemble;
  * @create 2018-09-08 18:30
  */
 public interface Assemble {
+    public void process()throws Exception;
 }

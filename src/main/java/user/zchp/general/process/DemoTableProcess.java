@@ -1,6 +1,7 @@
 package user.zchp.general.process;
 
 import user.zchp.general.Machine;
+import user.zchp.general.assemble.ClassAssemble;
 import user.zchp.general.component.Column;
 import user.zchp.general.component.DataType;
 import user.zchp.general.component.LeftTable;
@@ -25,7 +26,11 @@ public class DemoTableProcess implements TableProcess {
 
     @Override
     public void process(LeftTable table) {
-
+        try {
+            new ClassAssemble().process();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public TableConfig getTableConfig(){
