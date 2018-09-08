@@ -1,9 +1,9 @@
-package user.zchp.service.base;
+package user.zchp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import user.zchp.dao.base.RoleDao;
-import user.zchp.models.base.Role;
+import user.zchp.dao.RoleDao;
+import user.zchp.models.Role;
 
 import java.util.ArrayList;
 import java.util.HashSet;

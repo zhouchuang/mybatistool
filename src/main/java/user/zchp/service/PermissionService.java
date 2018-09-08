@@ -1,11 +1,11 @@
-package user.zchp.service.base;
+package user.zchp.service;
 
 
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import user.zchp.dao.base.PermissionDao;
-import user.zchp.models.base.Permission;
+import user.zchp.dao.PermissionDao;
+import user.zchp.models.Permission;
 import user.zchp.utils.QueryParam;
 
 import java.util.ArrayList;

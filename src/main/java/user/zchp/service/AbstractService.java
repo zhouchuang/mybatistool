@@ -1,9 +1,9 @@
-package user.zchp.service.base;
+package user.zchp.service;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 import user.zchp.aop.StorageChild;
-import user.zchp.dao.base.Dao;
+import user.zchp.dao.Dao;
 import user.zchp.utils.*;
 
 import java.lang.reflect.Field;

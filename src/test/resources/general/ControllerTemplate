@@ -1,12 +1,12 @@
 package ${packageName}.controller;
 
 
-import user.zchp.controller.base.BaseController;
-import user.zchp.models.PageParam;
-import user.zchp.models.QueryParam;
+import com.yskj.controller.base.BaseController;
+import user.hpzc.utils.PageParam;
+import user.hpzc.utils.QueryParam;
 import ${packageName}.models.${className};
 import ${packageName}.service.${className}Service;
-import user.zc.utils.Result;
+import com.yskj.utils.Result;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

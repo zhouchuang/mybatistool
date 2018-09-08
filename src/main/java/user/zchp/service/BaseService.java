@@ -1,4 +1,4 @@
-package user.zchp.service.base;
+package user.zchp.service;
 
 
 import user.zchp.utils.BaseEntity;

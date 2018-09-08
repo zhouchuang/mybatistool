@@ -1,4 +1,4 @@
-package user.zchp.dao.base;
+package user.zchp.dao;
 
 
 import user.zchp.utils.BaseEntity;

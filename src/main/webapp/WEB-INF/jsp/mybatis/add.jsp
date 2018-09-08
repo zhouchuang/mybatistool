@@ -52,7 +52,7 @@
 </div>
 <script>
     var tablelist = [];
-    var tabletemplate = "<li class=\"tablename\" ><input type=\"checkbox\" value=\"@{name}\" data-id=\"@{id}\" data-ref=\"@{ref}\"  ><label >@{name}</label></li>";
+    var tabletemplate = "<li class=\"tablename\" ><input type=\"checkbox\" value=\"@{name}\" data-id=\"@{id}\" data-status=\"@{status}\" data-ref=\"@{ref}\"  ><label >@{name}</label></li>";
     var fieldtemplate = "<li><input type=\"checkbox\" value=\"@{name}\" ><label style='color:#909090'>@{name}</label></li>";
     $('#add').click(function(){
         addTable();
@@ -90,8 +90,9 @@
             $("#tables").on('click','li',function () {
                 var _this = $(this);
                 var table = $(this).text();
-                $.getJSON("/TableController/FieldList?table="+table,function (data) {
-                    data = data.data;
+                $.getJSON("/TableController/FieldList?table="+table,function (result) {
+                    var data = result.data.list;
+                    var status = result.data.status;
                     var fieldhtml = "";
                     var html = "";
                     for(var key in data){
@@ -102,7 +103,7 @@
                     $("#fields").off("click");
                     $("#fields").on('click','li',function(){
                         refId = $(this).text();
-                        var lihtml  =  tabletemplate.replace("@{name}",table).replace("@{name}",util.getFirstUp(table)).replace("@{id}",id).replace("@{ref}",refId);
+                        var lihtml  =  tabletemplate.replace("@{name}",table).replace("@{name}",(util.getFirstUp(table)+(status==true?"<span class=\"glyphicon glyphicon-th-list\" aria-hidden=\"true\"></span>":""))).replace("@{id}",id).replace("@{ref}",refId).replace("@{status}",status);
                         appendDom.append(lihtml+"<ul>"+html+"</ul>");
                         initTree();
                     });
@@ -137,6 +138,7 @@
                 var tableDom = $(item);
                 var table = {
                     tableName:tableDom.children("input").val(),
+                    status:tableDom.children("input").data("status"),
                     fields:getFieldlist(tableDom)
                 }
                 var childs =  tableDom.next("ul").children("li[class='tablename']");

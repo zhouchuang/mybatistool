@@ -1,8 +1,8 @@
-package user.zchp.service.base;
+package user.zchp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import user.zchp.dao.base.SearchlogDao;
+import user.zchp.dao.SearchlogDao;
 
 /**
  * 搜索

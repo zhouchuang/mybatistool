@@ -3,7 +3,7 @@ package general;
 
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import user.zchp.aop.StorageChild;
-import user.zchp.models.base.User;
+import user.zchp.models.User;
 import user.zchp.utils.BaseEntity;
 import user.zchp.utils.StringUtils;
 

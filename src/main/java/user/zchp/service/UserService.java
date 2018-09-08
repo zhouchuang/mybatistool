@@ -1,4 +1,4 @@
-package user.zchp.service.base;
+package user.zchp.service;
 
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -6,10 +6,10 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import user.zchp.dao.base.UserDao;
-import user.zchp.models.base.Permission;
-import user.zchp.models.base.Role;
-import user.zchp.models.base.User;
+import user.zchp.dao.UserDao;
+import user.zchp.models.Permission;
+import user.zchp.models.Role;
+import user.zchp.models.User;
 
 import java.util.ArrayList;
 import java.util.HashSet;

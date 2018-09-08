@@ -1,0 +1,1 @@
+package user.zchp.dao;public interface SearchlogDao extends Dao {}

@@ -1,6 +1,6 @@
-package user.zchp.dao.base;
+package user.zchp.dao;
 
-import user.zchp.models.base.User;
+import user.zchp.models.User;
 import user.zchp.utils.PageParam;
 
 import java.util.HashMap;

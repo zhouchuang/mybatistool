@@ -5,8 +5,8 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
-import user.zchp.models.base.User;
-import user.zchp.service.base.UserService;
+import user.zchp.models.User;
+import user.zchp.service.UserService;
 import user.zchp.utils.QueryParam;
 
 

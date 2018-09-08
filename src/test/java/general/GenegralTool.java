@@ -1,7 +1,6 @@
 package general;
 
-
-import user.zchp.service.base.DictCacheService;
+import user.zchp.service.DictCacheService;
 import user.zchp.utils.StringUtils;
 
 import java.io.*;
@@ -16,10 +15,10 @@ public class GenegralTool {
 
 	/*public static String tableName = "shiro_permission";
 	public static String name = "Permission";*/
-	public static final String packageName  = "user.zc";
+	public static final String packageName  = "user.zchp";
 	public static final String databaseName = "tool";
 
-	
+
 	public static final String pkId = "id";
 	//以下4个列必须字段 ，一般以前的表里面都会有，或者换一个名字CREATE_DATE 之类  请一一对应好，如果没有此些字段  生成代码的时候会自动往表里面添加这些字段
 	public static final String createdBy = "createBy";//CREATOR     创建人
@@ -52,13 +51,13 @@ public class GenegralTool {
 		properties.load(is);
 		System.out.println("我成功读取");
 		is.close();
-		 driver = (String)properties.get("jdbc.driver");
-		 url = (String)properties.get("jdbc.url");
-		 username = (String)properties.get("jdbc.username");
-		 password = (String)properties.get("jdbc.password");
+		driver = (String)properties.get("jdbc.driver");
+		url = (String)properties.get("jdbc.url");
+		username = (String)properties.get("jdbc.username");
+		password = (String)properties.get("jdbc.password");
 
-		batchGeneral();
-//		general("news","News");
+//		batchGeneral();
+		general("tableinfo","TableInfo");
 	}
 
 
@@ -98,71 +97,71 @@ public class GenegralTool {
 	}
 
 	public static void general(String tableName,String name)throws Exception {
-        String sql;
-        // MySQL的JDBC URL编写方式：jdbc:mysql://主机名称：连接端口/数据库的名称?参数=值
-        // 避免中文乱码要指定useUnicode和characterEncoding
-        // 执行数据库操作之前要在数据库管理系统上创建一个数据库，名字自己定，
-        // 下面语句之前就要先创建javademo数据库
+		String sql;
+		// MySQL的JDBC URL编写方式：jdbc:mysql://主机名称：连接端口/数据库的名称?参数=值
+		// 避免中文乱码要指定useUnicode和characterEncoding
+		// 执行数据库操作之前要在数据库管理系统上创建一个数据库，名字自己定，
+		// 下面语句之前就要先创建javademo数据库
 
 		Connection conn = null;
 		try {
-            // 之所以要使用下面这条语句，是因为要使用MySQL的驱动，所以我们要把它驱动起来，
-            // 可以通过Class.forName把它加载进去，也可以通过初始化来驱动起来，下面三种形式都可以
-            Class.forName(driver);// 动态加载mysql驱动
+			// 之所以要使用下面这条语句，是因为要使用MySQL的驱动，所以我们要把它驱动起来，
+			// 可以通过Class.forName把它加载进去，也可以通过初始化来驱动起来，下面三种形式都可以
+			Class.forName(driver);// 动态加载mysql驱动
 
-            System.out.println("成功加载MySQL驱动程序");
-            // 一个Connection代表一个数据库连接
-            conn = DriverManager.getConnection(url,username,password);
-            // Statement里面带有很多方法，比如executeUpdate可以实现插入，更新和删除等
+			System.out.println("成功加载MySQL驱动程序");
+			// 一个Connection代表一个数据库连接
+			conn = DriverManager.getConnection(url,username,password);
+			// Statement里面带有很多方法，比如executeUpdate可以实现插入，更新和删除等
 
 
 
-            Map<String,String>  comments = new HashMap<String,String>();
-            //获取列注释
-            Statement colmunment = conn.createStatement();
+			Map<String,String>  comments = new HashMap<String,String>();
+			//获取列注释
+			Statement colmunment = conn.createStatement();
 //            ResultSet result = colmunment.executeQuery("select * from user_col_comments where table_name = '"+tableName.toUpperCase()+"'");
-			ResultSet result = colmunment.executeQuery("select COLUMN_NAME,column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableName+"' and table_schema='ijob'");
-            while(result.next()){
-            	comments.put(result.getString("COLUMN_NAME"), result.getString("column_comment"));
-            }
-            //获取列属性
-            DatabaseMetaData metaData = conn.getMetaData();
-            ResultSet rs = metaData.getColumns(conn.getCatalog(), username.toUpperCase(), tableName.toUpperCase(), null);
-            ClassModel cm  = new ClassModel();
-            cm.setName(StringUtils.getFirstCharToLower(name));
-            cm.setPackageName(packageName);
-            cm.setTableName(tableName);
-            cm.setPkId(pkId);
-            cm.setCreateBy(createdBy);
-            cm.setCreateTime(createdDate);
-            cm.setUpdateBy(modifiedBy);
-            cm.setUpdateTime(modifiedDate);
-            while(rs.next()) {
-              if(!pkId.toUpperCase().equals(rs.getString("COLUMN_NAME").toUpperCase())){
-            	  Column column = new Column();
-            	  column.setColumnSize(Integer.parseInt(rs.getString("DECIMAL_DIGITS")!=null?rs.getString("DECIMAL_DIGITS"):"0"));
-				  String str = rs.getString("COLUMN_SIZE");
-				  if(StringUtils.isEmpty(str)){
-				  	str = "0";
-				  }
-            	  column.setDecimalNum(Integer.parseInt(str));
-                  column.setColumnName(rs.getString("COLUMN_NAME"));
-                  column.setColumnType(rs.getString("TYPE_NAME"));
-                  column.setRemarks(comments.get(rs.getString("COLUMN_NAME")));
-                  column.setDefaultValue(rs.getString("COLUMN_DEF"));
-                  cm.addColumn(column);
-              }
-            }
-            //新增基本列
-            Statement statement = conn.createStatement();
-            if(pkId.toUpperCase().equals("ID")){
-            	try{
-            		statement.executeUpdate("alter table "+cm.getTableName()+" add (id VARCHAR(36)) ");
-            	}catch(SQLException e){
-            		System.out.println(cm.getTableName()+"已经存在'ID'列\n"+e.getMessage());
-            	}
-    		}
-			 //CREATOR
+			ResultSet result = colmunment.executeQuery("select COLUMN_NAME,column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableName+"' and table_schema='"+databaseName+"'");
+			while(result.next()){
+				comments.put(result.getString("COLUMN_NAME"), result.getString("column_comment"));
+			}
+			//获取列属性
+			DatabaseMetaData metaData = conn.getMetaData();
+			ResultSet rs = metaData.getColumns(conn.getCatalog(), username, tableName, null);
+			ClassModel cm  = new ClassModel();
+			cm.setName(StringUtils.getFirstCharToLower(name));
+			cm.setPackageName(packageName);
+			cm.setTableName(tableName);
+			cm.setPkId(pkId);
+			cm.setCreateBy(createdBy);
+			cm.setCreateTime(createdDate);
+			cm.setUpdateBy(modifiedBy);
+			cm.setUpdateTime(modifiedDate);
+			while(rs.next()) {
+				if(!pkId.toUpperCase().equals(rs.getString("COLUMN_NAME").toUpperCase())){
+					Column column = new Column();
+					column.setColumnSize(Integer.parseInt(rs.getString("DECIMAL_DIGITS")!=null?rs.getString("DECIMAL_DIGITS"):"0"));
+					String str = rs.getString("COLUMN_SIZE");
+					if(StringUtils.isEmpty(str)){
+						str = "0";
+					}
+					column.setDecimalNum(Integer.parseInt(str));
+					column.setColumnName(rs.getString("COLUMN_NAME"));
+					column.setColumnType(rs.getString("TYPE_NAME"));
+					column.setRemarks(comments.get(rs.getString("COLUMN_NAME")));
+					column.setDefaultValue(rs.getString("COLUMN_DEF"));
+					cm.addColumn(column);
+				}
+			}
+			//新增基本列
+			Statement statement = conn.createStatement();
+			if(pkId.toUpperCase().equals("ID")){
+				try{
+					statement.executeUpdate("alter table "+cm.getTableName()+" add (id VARCHAR(36)) ");
+				}catch(SQLException e){
+					System.out.println(cm.getTableName()+"已经存在'ID'列\n"+e.getMessage());
+				}
+			}
+			//CREATOR
 			try{
 				statement.executeUpdate("alter table "+cm.getTableName()+" add ("+createdBy+"  VARCHAR(36)) ");
 			}catch(SQLException e){
@@ -201,26 +200,26 @@ public class GenegralTool {
 				System.out.println(cm.getTableName()+"已经存在'isDeleted '列\n"+e.getMessage());
 			}
 			getClassModel(cm);
-            getMapperXML(cm);
-            getMapperModel(cm);
-            getServiceModel(cm);
-            getControllerModel(cm);
+			getMapperXML(cm);
+			getMapperModel(cm);
+			getServiceModel(cm);
+			getControllerModel(cm);
 			getApiModel(cm);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-            	System.out.println("代码生成完成");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				System.out.println("代码生成完成");
 				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-        }
+		}
 
-    }
+	}
 
 	private static  String toUpperFirstLetterCase(String str){
 		return  str.substring(0,1).toUpperCase()+str.substring(1);
@@ -234,7 +233,7 @@ public class GenegralTool {
 			BufferedReader br = new BufferedReader(fr);
 			String s;
 			while ((s = br.readLine()) != null) {
-				 sb.append(s+"\r");
+				sb.append(s+"\r");
 			}
 			br.close();
 			fr.close();
@@ -248,15 +247,15 @@ public class GenegralTool {
 				if(field.getType().getName().equals("java.lang.String"))
 					xmlString = xmlString.replace("${"+field.getName()+"}",(String)cm.getClass().getMethod("get"+toUpperFirstLetterCase(field.getName()),null).invoke(cm,null));
 			}
-			
+
 			Pattern pattern = Pattern.compile("@([a-zA-Z]+)\\{(.+)\\}@",Pattern.MULTILINE);
 			Matcher matcher = pattern.matcher(xmlString);
 			while(matcher.find()){
 //			    System.out.println(matcher.group(0));
 //			    System.out.println(matcher.group(1));
-			    //System.out.println(matcher.group(2));
-			    StringBuffer params  = new StringBuffer();
-			    List<String> matList = new ArrayList<String>();
+				//System.out.println(matcher.group(2));
+				StringBuffer params  = new StringBuffer();
+				List<String> matList = new ArrayList<String>();
 				Pattern paramreg = Pattern.compile("@\\{([^\\}]+)\\}");
 				Matcher parammat = paramreg.matcher(matcher.group(2));
 				while(parammat.find()){
@@ -278,8 +277,8 @@ public class GenegralTool {
 				String paramsresult = params.toString();
 				if(!flag&&!"".equals(paramsresult))
 					paramsresult = paramsresult.substring(0, paramsresult.length()-1);
-			    xmlString   =  xmlString.replace(matcher.group(0),paramsresult);
-			    matcher = pattern.matcher(xmlString);
+				xmlString   =  xmlString.replace(matcher.group(0),paramsresult);
+				matcher = pattern.matcher(xmlString);
 			}
 			//System.out.println(xmlString);
 			File fgroup  = new File(DictCacheService.OUT_JAVA_PATH+File.separator+packageName.replace(".",File.separator)+File.separator+ "mapper");
@@ -288,17 +287,17 @@ public class GenegralTool {
 			}
 			File fout = new File(DictCacheService.OUT_JAVA_PATH+File.separator+packageName.replace(".",File.separator)+File.separator+ "mapper" +File.separator+cm.getClassName()+"Dao.xml");
 			if(fout.exists()){
-				fout.delete(); 
+				fout.delete();
 			}
 			BufferedWriter writer = new BufferedWriter(new FileWriter(fout, true));
-		 	writer.write(xmlString);
-		 	writer.close();
-		 	
+			writer.write(xmlString);
+			writer.close();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 	private static void getMapperModel(ClassModel cm){
 		StringBuffer sb = new StringBuffer();
@@ -308,7 +307,7 @@ public class GenegralTool {
 			BufferedReader br = new BufferedReader(fr);
 			String s;
 			while ((s = br.readLine()) != null) {
-				 sb.append(s+"\r");
+				sb.append(s+"\r");
 			}
 			br.close();
 			fr.close();
@@ -318,19 +317,19 @@ public class GenegralTool {
 				if(field.getType().getName().equals("java.lang.String"))
 					classString = classString.replace("${"+field.getName()+"}",(String)cm.getClass().getMethod("get"+toUpperFirstLetterCase(field.getName()),null).invoke(cm,null));
 			}
-			
+
 			File fgroup  = new File(DictCacheService.OUT_JAVA_PATH+File.separator+packageName.replace(".",File.separator)+File.separator+"dao");
 			if(!fgroup.exists()){
 				fgroup.mkdirs();
 			}
 			File fout = new File(DictCacheService.OUT_JAVA_PATH+File.separator+packageName.replace(".",File.separator)+File.separator+"dao"+File.separator+cm.getClassName()+"Dao.java");
 			if(fout.exists()){
-				fout.delete(); 
+				fout.delete();
 			}
 			BufferedWriter writer = new BufferedWriter(new FileWriter(fout, true));
-		 	writer.write(classString);
-		 	writer.close();
-		 	
+			writer.write(classString);
+			writer.close();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -345,7 +344,7 @@ public class GenegralTool {
 			BufferedReader br = new BufferedReader(fr);
 			String s;
 			while ((s = br.readLine()) != null) {
-				 sb.append(s+"\r");
+				sb.append(s+"\r");
 			}
 			br.close();
 			fr.close();
@@ -355,25 +354,25 @@ public class GenegralTool {
 				if(field.getType().getName().equals("java.lang.String"))
 					classString = classString.replace("${"+field.getName()+"}",(String)cm.getClass().getMethod("get"+toUpperFirstLetterCase(field.getName()),null).invoke(cm,null));
 			}
-			
+
 			File fgroup  = new File(DictCacheService.OUT_JAVA_PATH+File.separator+packageName.replace(".",File.separator)+File.separator+"service");
 			if(!fgroup.exists()){
 				fgroup.mkdirs();
 			}
 			File fout = new File(DictCacheService.OUT_JAVA_PATH+File.separator+packageName.replace(".",File.separator)+File.separator+"service"+File.separator+cm.getClassName()+"Service.java");
 			if(fout.exists()){
-				fout.delete(); 
+				fout.delete();
 			}
 			BufferedWriter writer = new BufferedWriter(new FileWriter(fout, true));
-		 	writer.write(classString);
-		 	writer.close();
-		 	
+			writer.write(classString);
+			writer.close();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static void getControllerModel(ClassModel cm){
 		StringBuffer sb = new StringBuffer();
 		File f = new File(rootPath+"ControllerTemplate");
@@ -382,7 +381,7 @@ public class GenegralTool {
 			BufferedReader br = new BufferedReader(fr);
 			String s;
 			while ((s = br.readLine()) != null) {
-				 sb.append(s+"\r");
+				sb.append(s+"\r");
 			}
 			br.close();
 			fr.close();
@@ -392,19 +391,19 @@ public class GenegralTool {
 				if(field.getType().getName().equals("java.lang.String"))
 					classString = classString.replace("${"+field.getName()+"}",(String)cm.getClass().getMethod("get"+toUpperFirstLetterCase(field.getName()),null).invoke(cm,null));
 			}
-			
+
 			File fgroup  = new File(DictCacheService.OUT_JAVA_PATH+File.separator+packageName.replace(".",File.separator)+File.separator+"controller");
 			if(!fgroup.exists()){
 				fgroup.mkdirs();
 			}
 			File fout = new File(DictCacheService.OUT_JAVA_PATH+File.separator+packageName.replace(".",File.separator)+File.separator+"controller"+File.separator+cm.getClassName()+"Controller.java");
 			if(fout.exists()){
-				fout.delete(); 
+				fout.delete();
 			}
 			BufferedWriter writer = new BufferedWriter(new FileWriter(fout, true));
-		 	writer.write(classString);
-		 	writer.close();
-		 	
+			writer.write(classString);
+			writer.close();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -455,7 +454,7 @@ public class GenegralTool {
 			BufferedReader br = new BufferedReader(fr);
 			String s;
 			while ((s = br.readLine()) != null) {
-				 sb.append(s+"\r");
+				sb.append(s+"\r");
 			}
 			br.close();
 			fr.close();
@@ -470,7 +469,7 @@ public class GenegralTool {
 					+ space+space+"return this."+cl.getName()+";\r"
 					+ space+"}\n\r");*/
 				}
-				
+
 			}
 			String classString = sb.toString();
 			classString  =  classString.replace("${packageName}", cm.getPackageName());
@@ -478,24 +477,24 @@ public class GenegralTool {
 			classString  =  classString.replace("${className}", cm.getClassName());
 			classString  =  classString.replace("${function}", function.toString());
 			//System.out.println(classString);
-			
+
 			File fgroup  = new File(DictCacheService.OUT_JAVA_PATH+File.separator+packageName.replace(".",File.separator)+File.separator+"models");
 			if(!fgroup.exists()){
 				fgroup.mkdirs();
 			}
 			File fout = new File(DictCacheService.OUT_JAVA_PATH+File.separator+packageName.replace(".",File.separator)+File.separator+"models"+File.separator+cm.getClassName()+".java");
 			if(fout.exists()){
-				fout.delete(); 
+				fout.delete();
 			}
 			BufferedWriter writer = new BufferedWriter(new FileWriter(fout, true));
-		 	writer.write(classString);
-		 	writer.close();
-		 	
+			writer.write(classString);
+			writer.close();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 }
 

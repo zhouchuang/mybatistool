@@ -1,6 +1,6 @@
-package user.zchp.dao.base;
+package user.zchp.dao;
 
-import user.zchp.models.base.Permission;
+import user.zchp.models.Permission;
 import user.zchp.utils.PageParam;
 import user.zchp.utils.QueryParam;
 

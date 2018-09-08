@@ -20,11 +20,16 @@ public class DemoTableProcess implements TableProcess {
             .addDefaultColumn(new Column(DataType.String,"updateBy"))
             .addDefaultColumn(new Column(DataType.Date,"createTime"))
             .addDefaultColumn(new Column(DataType.Date,"updateTime"))
-            .addDefaultColumn(new Column(DataType.Boolean,"isDeleted"));
+            .addDefaultColumn(new Column(DataType.Boolean,"isDeleted"))
+            .setDefaultPath("user.zc");
 
     @Override
     public void process(LeftTable table) {
 
+    }
+
+    public TableConfig getTableConfig(){
+        return this.tableConfig;
     }
 
     @Override

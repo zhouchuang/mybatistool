@@ -38,14 +38,14 @@
         <form action="/toLogin">
             <div class="input-group input-group-lg line">
                 <span class="input-group-addon" id="sizing-addon1">@</span>
-                <input type="text" name="accountNo" class="form-control" placeholder="Username" aria-describedby="sizing-addon1">
+                <input type="text" name="accountNo" class="form-control" placeholder="Username" value="admin" aria-describedby="sizing-addon1">
             </div>
             <div class="input-group input-group-lg line">
                 <span class="input-group-addon" id="sizing-addon2">@</span>
-                <input type="password"  name="password" class="form-control" placeholder="Password" aria-describedby="sizing-addon2">
+                <input type="password"  name="password" class="form-control" placeholder="Password" value="123456" aria-describedby="sizing-addon2">
             </div>
             <div class="input-group input-group-lg line">
-                <button type="submit" class="btn btn-default">登录</button>
+                <button type="submit" class="btn btn-default" id="submit">登录</button>
             </div>
         </form>
     </div>
@@ -54,5 +54,8 @@
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="/static/js/jquery-2.2.3.js"></script>
 <script src="/bootstrap/js/bootstrap.min.js" ></script>
+<script>
+    $("#submit").click();
+</script>
 </body>
 </html>

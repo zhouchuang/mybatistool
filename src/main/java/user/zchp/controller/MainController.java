@@ -8,9 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import user.zchp.models.base.User;
-import user.zchp.service.base.PermissionService;
-import user.zchp.service.base.RoleService;
+import user.zchp.models.User;
+import user.zchp.service.PermissionService;
+import user.zchp.service.RoleService;
 
 import javax.servlet.http.HttpServletRequest;
 

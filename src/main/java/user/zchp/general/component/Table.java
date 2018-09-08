@@ -17,4 +17,5 @@ public class Table  implements Serializable {
     private String tableName;
     private List<Field> fields;
     private List<LeftTable> leftTables;
+    private Boolean status;
 }

@@ -5,12 +5,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import user.zchp.models.base.Permission;
-import user.zchp.models.base.Role;
-import user.zchp.models.base.User;
-import user.zchp.service.base.PermissionService;
-import user.zchp.service.base.RoleService;
-import user.zchp.service.base.UserService;
+import user.zchp.models.Permission;
+import user.zchp.models.Role;
+import user.zchp.models.User;
+import user.zchp.service.PermissionService;
+import user.zchp.service.RoleService;
+import user.zchp.service.UserService;
 import user.zchp.utils.MD5Tools;
 
 /**

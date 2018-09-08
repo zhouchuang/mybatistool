@@ -2,7 +2,7 @@ package user.zchp.utils;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
-import user.zchp.models.base.User;
+import user.zchp.models.User;
 
 import java.lang.reflect.Field;
 

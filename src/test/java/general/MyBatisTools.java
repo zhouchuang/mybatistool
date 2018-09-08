@@ -1,7 +1,7 @@
 package general;
 
 
-import user.zchp.models.base.Permission;
+import user.zchp.models.Permission;
 
 import java.lang.reflect.Field;
 

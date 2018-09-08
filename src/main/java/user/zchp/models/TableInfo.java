@@ -1,0 +1,1 @@
+package user.zchp.models;import user.zchp.utils.BaseEntity;import lombok.Data;//表名称 tableinfo@Datapublic class TableInfo extends BaseEntity {	private static final long serialVersionUID = 1L;	public TableInfo() {		super();	}	    //表名称    private String name;    //状态    private Boolean status;}

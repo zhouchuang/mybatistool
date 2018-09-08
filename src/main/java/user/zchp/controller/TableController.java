@@ -11,10 +11,14 @@ import user.zchp.general.Machine;
 import user.zchp.general.pipeline.Console;
 import user.zchp.general.process.DemoTableProcess;
 import user.zchp.general.component.LeftTable;
-import user.zchp.service.base.TableService;
+import user.zchp.models.TableInfo;
+import user.zchp.service.TableInfoService;
+import user.zchp.service.BusinessTableService;
+import user.zchp.utils.QueryParam;
 import user.zchp.utils.Result;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +33,9 @@ import java.util.Map;
 public class TableController {
 
     @Autowired
-    TableService tableService;
+    BusinessTableService businessTableService;
+    @Autowired
+    TableInfoService tableInfoService;
 
     @RequestMapping(value="/index")
     public String index(Model model , HttpServletRequest request) {
@@ -40,7 +46,7 @@ public class TableController {
     @ResponseBody
     public Result tableList(String database ){
         Result result = new Result();
-        List<String> list = tableService.tableList(database);
+        List<String> list = businessTableService.tableList(database);
         result.setData(list);
         return result;
     }
@@ -49,8 +55,16 @@ public class TableController {
     @ResponseBody
     public Result fieldList(String table ){
         Result result = new Result();
-        List<Map> list = tableService.fieldList(table);
-        result.setData(list);
+        List<Map> list = businessTableService.fieldList(table);
+        Map map = new HashMap();
+        map.put("list",list);
+        try {
+            TableInfo tableInfo = tableInfoService.one(new QueryParam("name",table));
+            map.put("status",tableInfo!=null&&tableInfo.getStatus());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        result.setData(map);
         return result;
     }
 

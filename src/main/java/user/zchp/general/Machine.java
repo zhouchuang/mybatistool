@@ -38,6 +38,9 @@ public class Machine{
     }
 
     public void processTable(){
-        
+
+        for (Pipeline pipeline : pipelineList) {
+            pipeline.process(new StringBuffer());
+        }
     }
 }
