@@ -1,15 +1,8 @@
 package user.zchp.service;
 
-import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import user.zchp.dao.Dao;
-import user.zchp.dao.TableDao;
-import user.zchp.general.resource.AbstractResource;
-import user.zchp.utils.StringUtils;
+import user.zchp.general.resource.AbstractDataResource;
 
-import javax.annotation.PostConstruct;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
 
@@ -20,7 +13,7 @@ import java.util.*;
  * @create 2018-05-12 14:46
  */
 @Service("tableService")
-public class BusinessTableService  extends AbstractResource{
+public class BusinessTableService  extends AbstractDataResource {
 
 
     public List<String>  tableList(String database){

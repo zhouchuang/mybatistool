@@ -72,7 +72,7 @@ public class TableController {
     @ResponseBody
     public Result generalDao(@RequestBody LeftTable leftTable){
         Result result = new Result();
-        Machine.create(new DemoTableProcess())
+        Machine.create(new DemoTableProcess(leftTable))
         .addPiplineList(new Console())
         .run();
         return result;

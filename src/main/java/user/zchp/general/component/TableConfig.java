@@ -1,5 +1,7 @@
 package user.zchp.general.component;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +11,12 @@ import java.util.List;
  * @author zhouchuang
  * @create 2018-08-22 22:16
  */
+@Data
 public class TableConfig {
     List<Column> defaultColumnList = new ArrayList<Column>();
     String basePath ;
+    String database ;
+//    String table;
     public static TableConfig me(){
         return new TableConfig();
     }
@@ -23,4 +28,12 @@ public class TableConfig {
         this.basePath = path;
         return this;
     }
+    public TableConfig setDatabase(String database){
+        this.database = database;
+        return this;
+    }
+    /*public TableConfig setTable(String table){
+        this.table = table;
+        return this;
+    }*/
 }

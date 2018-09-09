@@ -1,11 +1,13 @@
 package user.zchp.general.process;
 
+import lombok.Data;
 import user.zchp.general.Machine;
+import user.zchp.general.assemble.AbstractAssemble;
 import user.zchp.general.assemble.ClassAssemble;
-import user.zchp.general.component.Column;
-import user.zchp.general.component.DataType;
-import user.zchp.general.component.LeftTable;
-import user.zchp.general.component.TableConfig;
+import user.zchp.general.component.*;
+import user.zchp.general.pipeline.Console;
+
+import java.io.File;
 
 /**
  * 处理模板
@@ -13,8 +15,13 @@ import user.zchp.general.component.TableConfig;
  * @author zhouchuang
  * @create 2018-08-22 21:37
  */
+@Data
 public class DemoTableProcess implements TableProcess {
 
+    private LeftTable leftTable;
+    public DemoTableProcess(LeftTable leftTable){
+        this.leftTable = leftTable;
+    }
     private TableConfig tableConfig = TableConfig.me().addDefaultColumn(new Column(DataType.String,"id"))
             .addDefaultColumn(new Column(DataType.Integer,"version"))
             .addDefaultColumn(new Column(DataType.String,"createBy"))
@@ -22,23 +29,36 @@ public class DemoTableProcess implements TableProcess {
             .addDefaultColumn(new Column(DataType.Date,"createTime"))
             .addDefaultColumn(new Column(DataType.Date,"updateTime"))
             .addDefaultColumn(new Column(DataType.Boolean,"isDeleted"))
-            .setDefaultPath("user.zc");
+            .setDefaultPath("user.zc")
+            .setDatabase("tool");
 
     @Override
-    public void process(LeftTable table) {
-        try {
-            new ClassAssemble().process();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    public void process() {
 
-    public TableConfig getTableConfig(){
-        return this.tableConfig;
     }
 
     @Override
     public Machine getMachine() {
         return null;
+    }
+
+    @Override
+    public TableConfig getConfig() {
+        return tableConfig;
+    }
+    @Override
+    public LeftTable getLeftTable(){
+        return leftTable;
+    }
+
+
+    public static void main(String[] args) {
+        LeftTable leftTable  = new LeftTable() ;
+        Table table = new Table();
+        table.setTableName("user");
+        leftTable.setTable(table);
+        Machine.create(new DemoTableProcess(leftTable))
+                .addPiplineList(new Console())
+                .run();
     }
 }

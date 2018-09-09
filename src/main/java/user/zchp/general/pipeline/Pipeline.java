@@ -7,5 +7,5 @@ package user.zchp.general.pipeline;
  * @create 2018-08-22 21:48
  */
 public interface Pipeline {
-    public void process(StringBuffer stringBuffer);
+    void process(String text);
 }

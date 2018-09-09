@@ -1,5 +1,7 @@
 package user.zchp.general.assemble;
 
+import user.zchp.general.component.ClassModel;
+
 /**
  * 组装接口
  *
@@ -7,5 +9,7 @@ package user.zchp.general.assemble;
  * @create 2018-09-08 18:30
  */
 public interface Assemble {
-    public void process()throws Exception;
+    String space = "    ";
+    String newLine = "\n\r";
+    String  process(ClassModel classModel);
 }

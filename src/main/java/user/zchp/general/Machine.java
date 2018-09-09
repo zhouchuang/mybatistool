@@ -1,8 +1,15 @@
 package user.zchp.general;
 
+import user.zchp.general.assemble.Assemble;
+import user.zchp.general.assemble.ClassAssemble;
+import user.zchp.general.component.ClassModel;
+import user.zchp.general.component.ColumnInfo;
 import user.zchp.general.pipeline.Pipeline;
+import user.zchp.general.process.DemoTableProcess;
 import user.zchp.general.process.TableProcess;
+import user.zchp.general.resource.MysqlDataResource;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +21,7 @@ import java.util.List;
  */
 public class Machine{
     private List<Pipeline> pipelineList = new ArrayList<Pipeline>();
+    private List<Assemble> assembleList = new ArrayList<>();
     private TableProcess tableProcess;
     public Machine(TableProcess tableProcess){
         this.tableProcess = tableProcess;
@@ -35,12 +43,19 @@ public class Machine{
                 processTable();
             }
         });
+        thread.start();
     }
 
     public void processTable(){
-
-        for (Pipeline pipeline : pipelineList) {
-            pipeline.process(new StringBuffer());
+        try{
+            ClassModel classModel  = MysqlDataResource.getInstance().getClassModel(this.tableProcess);
+            String classString = new ClassAssemble().process(classModel);
+            for (Pipeline pipeline : pipelineList) {
+                pipeline.process(classString);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 }

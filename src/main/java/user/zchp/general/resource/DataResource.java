@@ -8,7 +8,7 @@ import java.sql.Connection;
  * @author:Administrator
  * @create 2018-09-08 18:07
  */
-public interface Resource {
+public interface DataResource {
     Connection getConn()throws Exception;
     void releaseConn(Connection connection);
 }

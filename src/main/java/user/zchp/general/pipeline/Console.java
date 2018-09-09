@@ -8,9 +8,9 @@ package user.zchp.general.pipeline;
  */
 public class Console implements Pipeline{
     @Override
-    public void process(StringBuffer stringBuffer) {
-        System.out.println("=========sql start==========");
-        System.out.println(stringBuffer.toString());
-        System.out.println("=========sql ends==========");
+    public void process(String text) {
+        System.out.println("=========Console start==========");
+        System.out.println(text);
+        System.out.println("=========Console end  ==========");
     }
 }

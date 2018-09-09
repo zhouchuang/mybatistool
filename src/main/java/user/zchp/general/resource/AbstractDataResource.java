@@ -15,11 +15,15 @@ import java.util.Properties;
  * @author:Administrator
  * @create 2018-09-08 18:14
  */
-public abstract class AbstractResource implements Resource {
-    private String driver;
-    private String url ;
-    private String username;
-    private String password;
+public abstract class AbstractDataResource implements DataResource {
+    protected String driver;
+    protected String url ;
+    protected String username;
+    protected String password;
+
+    public AbstractDataResource(){
+        init();
+    }
 
     @PostConstruct
     public void init(){
@@ -44,7 +48,6 @@ public abstract class AbstractResource implements Resource {
     public Connection getConn()throws Exception{
 
         Class.forName(driver);// 动态加载mysql驱动
-        System.out.println("成功加载MySQL驱动程序");
         return  DriverManager.getConnection(url,username,password);
     }
 
