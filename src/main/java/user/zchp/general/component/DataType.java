@@ -16,10 +16,10 @@ public enum DataType {
     BigDecimal("BigDecimal","decimal",11,2);
 
     //防止字段值被修改，增加的字段也统一final表示常量
-    private final String javatype;
-    private final String dbtype;
-    private final Integer len;
-    private final Integer accuracy;
+    public final String javatype;
+    public final String dbtype;
+    public final Integer len;
+    public final Integer accuracy;
 
 
     private DataType(String javatype,String dbtype,Integer len){

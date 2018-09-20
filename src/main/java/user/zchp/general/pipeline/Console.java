@@ -1,5 +1,9 @@
 package user.zchp.general.pipeline;
 
+import user.zchp.general.component.TemplateInfo;
+
+import java.util.List;
+
 /**
  * 控制台
  *
@@ -8,9 +12,13 @@ package user.zchp.general.pipeline;
  */
 public class Console implements Pipeline{
     @Override
-    public void process(String text) {
+    public void process(List<TemplateInfo> templateInfoList) {
         System.out.println("=========Console start==========");
-        System.out.println(text);
+        for(TemplateInfo templateInfo : templateInfoList){
+            System.out.println("Path:"+templateInfo.getPath());
+            System.out.println("Name:"+templateInfo.getClassName());
+            System.out.println("Text:"+templateInfo.getTemplate());
+        }
         System.out.println("=========Console end  ==========");
     }
 }

@@ -1,5 +1,9 @@
 package user.zchp.general.pipeline;
 
+import user.zchp.general.component.TemplateInfo;
+
+import java.util.List;
+
 /**
  * 文件输出
  *
@@ -8,7 +12,7 @@ package user.zchp.general.pipeline;
  */
 public class FileExport implements Pipeline{
     @Override
-    public void process(String text) {
+    public void process(List<TemplateInfo> templateInfoList) {
 
     }
 }

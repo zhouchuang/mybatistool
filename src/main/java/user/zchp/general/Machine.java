@@ -4,6 +4,7 @@ import user.zchp.general.assemble.Assemble;
 import user.zchp.general.assemble.ClassAssemble;
 import user.zchp.general.component.ClassModel;
 import user.zchp.general.component.ColumnInfo;
+import user.zchp.general.component.TemplateInfo;
 import user.zchp.general.pipeline.Pipeline;
 import user.zchp.general.process.DemoTableProcess;
 import user.zchp.general.process.TableProcess;
@@ -22,6 +23,7 @@ import java.util.List;
 public class Machine{
     private List<Pipeline> pipelineList = new ArrayList<Pipeline>();
     private List<Assemble> assembleList = new ArrayList<>();
+    private List<TemplateInfo> templateInfos = new ArrayList<TemplateInfo>();
     private TableProcess tableProcess;
     public Machine(TableProcess tableProcess){
         this.tableProcess = tableProcess;
@@ -48,10 +50,11 @@ public class Machine{
 
     public void processTable(){
         try{
-            ClassModel classModel  = MysqlDataResource.getInstance().getClassModel(this.tableProcess);
-            String classString = new ClassAssemble().process(classModel);
+            ClassModel classModel  = MysqlDataResource.getInstance().addBaseColumn(this.tableProcess).getClassModel(this.tableProcess);
+            TemplateInfo modelClassTemplate = new ClassAssemble().process(classModel);
+            templateInfos.add(modelClassTemplate);
             for (Pipeline pipeline : pipelineList) {
-                pipeline.process(classString);
+                pipeline.process(templateInfos);
             }
         }catch (Exception e){
             e.printStackTrace();

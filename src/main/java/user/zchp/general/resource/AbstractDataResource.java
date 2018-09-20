@@ -20,6 +20,7 @@ public abstract class AbstractDataResource implements DataResource {
     protected String url ;
     protected String username;
     protected String password;
+    protected Connection conn = null;
 
     public AbstractDataResource(){
         init();
@@ -46,9 +47,9 @@ public abstract class AbstractDataResource implements DataResource {
 
     @Override
     public Connection getConn()throws Exception{
-
         Class.forName(driver);// 动态加载mysql驱动
-        return  DriverManager.getConnection(url,username,password);
+        conn =   DriverManager.getConnection(url,username,password);
+        return conn;
     }
 
     @Override
@@ -56,6 +57,16 @@ public abstract class AbstractDataResource implements DataResource {
         if(conn!=null){
             try {
                 conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void releaseConn(){
+        if(this.conn!=null){
+            try {
+                this.conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -22,7 +22,7 @@ public class Column {
     private Integer columnSize;
     private Integer decimalNum;
     private DataType dataType;
-
+    private Boolean isBase;
     public Column(DataType dataType,String name){
         this.dataType = dataType;
         this.name = name;

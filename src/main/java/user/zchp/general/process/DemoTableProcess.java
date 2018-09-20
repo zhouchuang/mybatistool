@@ -22,13 +22,14 @@ public class DemoTableProcess implements TableProcess {
     public DemoTableProcess(LeftTable leftTable){
         this.leftTable = leftTable;
     }
-    private TableConfig tableConfig = TableConfig.me().addDefaultColumn(new Column(DataType.String,"id"))
-            .addDefaultColumn(new Column(DataType.Integer,"version"))
+    private TableConfig tableConfig = TableConfig.me()
             .addDefaultColumn(new Column(DataType.String,"createBy"))
             .addDefaultColumn(new Column(DataType.String,"updateBy"))
             .addDefaultColumn(new Column(DataType.Date,"createTime"))
             .addDefaultColumn(new Column(DataType.Date,"updateTime"))
             .addDefaultColumn(new Column(DataType.Boolean,"isDeleted"))
+            .setPk(new Column(DataType.String,"id"))
+            .setVersion(new Column(DataType.Integer,"version"))
             .setDefaultPath("user.zc")
             .setDatabase("tool");
 
@@ -55,7 +56,7 @@ public class DemoTableProcess implements TableProcess {
     public static void main(String[] args) {
         LeftTable leftTable  = new LeftTable() ;
         Table table = new Table();
-        table.setTableName("user");
+        table.setTableName("test");
         leftTable.setTable(table);
         Machine.create(new DemoTableProcess(leftTable))
                 .addPiplineList(new Console())

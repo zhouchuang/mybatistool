@@ -6,11 +6,9 @@ import user.zchp.general.component.ColumnInfo;
 import user.zchp.general.process.TableProcess;
 import user.zchp.utils.StringUtils;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,6 +39,8 @@ public class MysqlDataResource extends AbstractDataResource {
             }
         }catch (Exception e){
             e.printStackTrace();
+        }finally {
+            releaseConn();
         }
         return comments;
     }
@@ -55,30 +55,46 @@ public class MysqlDataResource extends AbstractDataResource {
             cm.setName(StringUtils.getFirstCharToLower(tableProcess.getLeftTable().getTable().getName()));
             cm.setPackageName(tableProcess.getConfig().getBasePath());
             cm.setTableName(tableProcess.getLeftTable().getTable().getTableName());
-            cm.setPkId("id");
-            cm.setCreateBy("createBy");
-            cm.setCreateTime("createTime");
-            cm.setUpdateBy("updateBy");
-            cm.setUpdateTime("updateTime");
             while(rs.next()) {
-                if(!"id".toUpperCase().equals(rs.getString("COLUMN_NAME").toUpperCase())){
-                    Column column = new Column();
-                    column.setColumnSize(Integer.parseInt(rs.getString("DECIMAL_DIGITS")!=null?rs.getString("DECIMAL_DIGITS"):"0"));
-                    String str = rs.getString("COLUMN_SIZE");
-                    if(StringUtils.isEmpty(str)){
-                        str = "0";
-                    }
-                    column.setDecimalNum(Integer.parseInt(str));
-                    column.setColumnName(rs.getString("COLUMN_NAME"));
-                    column.setColumnType(rs.getString("TYPE_NAME"));
-                    column.setRemarks(comments.get(rs.getString("COLUMN_NAME")));
-                    column.setDefaultValue(rs.getString("COLUMN_DEF"));
-                    cm.addColumn(column);
+                Column column = new Column();
+                column.setColumnSize(Integer.parseInt(rs.getString("DECIMAL_DIGITS")!=null?rs.getString("DECIMAL_DIGITS"):"0"));
+                String str = rs.getString("COLUMN_SIZE");
+                if(StringUtils.isEmpty(str)){
+                    str = "0";
                 }
+                column.setDecimalNum(Integer.parseInt(str));
+                column.setColumnName(rs.getString("COLUMN_NAME"));
+                column.setColumnType(rs.getString("TYPE_NAME"));
+                column.setRemarks(comments.get(rs.getString("COLUMN_NAME")));
+                column.setDefaultValue(rs.getString("COLUMN_DEF"));
+                column.setIsBase((tableProcess.getConfig().isBaseColumn(column.getName()))?Boolean.TRUE:Boolean.FALSE);
+                cm.addColumn(column);
             }
         }catch (Exception e){
             e.printStackTrace();
+        }finally {
+            releaseConn();
         }
         return cm;
+    }
+
+    //新增基本列
+    public MysqlDataResource addBaseColumn(TableProcess tableProcess){
+        try {
+            Statement  statement = getConn().createStatement();
+            List<Column> columnList = tableProcess.getConfig().getDefaultColumnList();
+            for(Column column : columnList){
+                try{
+                    statement.executeUpdate("alter table "+tableProcess.getLeftTable().getTable().getTableName()+" add ("+column.getName()+" "+column.getDataType().dbtype+"("+column.getDataType().len+")) ");
+                }catch(SQLException e){
+                    System.out.println(tableProcess.getLeftTable().getTable().getTableName()+"已经存在'"+column.getName()+"'列\n"+e.getMessage());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            releaseConn();
+        }
+        return this;
     }
 }

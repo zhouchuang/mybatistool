@@ -1,6 +1,7 @@
 package user.zchp.general.assemble;
 
 import user.zchp.general.component.ClassModel;
+import user.zchp.general.component.TemplateInfo;
 
 /**
  * 组装接口
@@ -11,5 +12,5 @@ import user.zchp.general.component.ClassModel;
 public interface Assemble {
     String space = "    ";
     String newLine = "\n\r";
-    String  process(ClassModel classModel);
+    TemplateInfo process(ClassModel classModel);
 }

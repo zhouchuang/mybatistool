@@ -13,10 +13,11 @@ import java.util.List;
  */
 @Data
 public class TableConfig {
+    Column pk;
+    Column version;
     List<Column> defaultColumnList = new ArrayList<Column>();
     String basePath ;
     String database ;
-//    String table;
     public static TableConfig me(){
         return new TableConfig();
     }
@@ -32,8 +33,26 @@ public class TableConfig {
         this.database = database;
         return this;
     }
-    /*public TableConfig setTable(String table){
-        this.table = table;
+
+    public  Boolean isBaseColumn(String name){
+        for(Column column : this.defaultColumnList){
+            if(column.getName().equalsIgnoreCase(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public TableConfig setPk(Column column){
+        this.pk = column;
+        this.defaultColumnList.add(column);
         return this;
-    }*/
+    }
+
+    public TableConfig setVersion(Column column){
+        this.version = column;
+        this.defaultColumnList.add(column);
+        return this;
+    }
+
 }

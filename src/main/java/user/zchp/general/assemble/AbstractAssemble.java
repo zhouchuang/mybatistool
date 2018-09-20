@@ -18,6 +18,8 @@ import java.io.FileReader;
 public abstract class AbstractAssemble implements Assemble {
 
     protected String templatePath;
+    protected String path;
+    protected String className;
     public StringBuffer read(String path)throws Exception{
         StringBuffer stringBuffer = TemplateResource.getInstance().read(path);
         return stringBuffer;
