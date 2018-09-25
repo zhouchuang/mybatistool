@@ -68,6 +68,8 @@
             <param-name>contextConfigLocation</param-name>
             <param-value>classpath:spring/spring-web.xml</param-value>
         </init-param>
+        <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
     </servlet>
     <servlet-mapping>
         <servlet-name>mvc-dispatcher</servlet-name>
@@ -76,7 +78,7 @@
     </servlet-mapping>
 
 
-     shiro过滤器
+     <!--shiro过滤器-->
     <filter>
         <filter-name>shiroFilter</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import user.zchp.general.Machine;
 import user.zchp.general.pipeline.Console;
+import user.zchp.general.pipeline.FileExport;
 import user.zchp.general.process.DemoTableProcess;
 import user.zchp.general.component.LeftTable;
 import user.zchp.models.TableInfo;
@@ -73,7 +74,7 @@ public class TableController {
     public Result generalDao(@RequestBody LeftTable leftTable){
         Result result = new Result();
         Machine.create(new DemoTableProcess(leftTable))
-        .addPiplineList(new Console())
+        .addPiplineList(new FileExport())
         .run();
         return result;
     }

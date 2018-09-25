@@ -33,7 +33,7 @@ public class MysqlDataResource extends AbstractDataResource {
         Map<String,String> comments = new HashMap<String,String>();
         try{
             Statement colmunment = getConn().createStatement();
-            ResultSet result = colmunment.executeQuery("select COLUMN_NAME,column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableProcess.getLeftTable().getTable().getTableName()+"' and table_schema='"+tableProcess.getConfig().getDatabase()+"'");
+            ResultSet result = colmunment.executeQuery("select COLUMN_NAME,column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableProcess.getCurentTable().getTableName()+"' and table_schema='"+tableProcess.getConfig().getDatabase()+"'");
             while(result.next()){
                 comments.put(result.getString("COLUMN_NAME"), result.getString("column_comment"));
             }
@@ -51,10 +51,10 @@ public class MysqlDataResource extends AbstractDataResource {
         try{
             Connection conn = getConn();
             DatabaseMetaData metaData = conn.getMetaData();
-            ResultSet rs = metaData.getColumns(conn.getCatalog(), username, tableProcess.getLeftTable().getTable().getTableName(), null);
-            cm.setName(StringUtils.getFirstCharToLower(tableProcess.getLeftTable().getTable().getName()));
+            ResultSet rs = metaData.getColumns(conn.getCatalog(), username, tableProcess.getCurentTable().getTableName(), null);
+            cm.setName(StringUtils.getFirstCharToLower(tableProcess.getCurentTable().getName()));
             cm.setPackageName(tableProcess.getConfig().getBasePackage());
-            cm.setTableName(tableProcess.getLeftTable().getTable().getTableName());
+            cm.setTableName(tableProcess.getCurentTable().getTableName());
             cm.setPath(tableProcess.getConfig().getBasePath());
             while(rs.next()) {
                 Column column = new Column();
@@ -86,9 +86,9 @@ public class MysqlDataResource extends AbstractDataResource {
             List<Column> columnList = tableProcess.getConfig().getDefaultColumnList();
             for(Column column : columnList){
                 try{
-                    statement.executeUpdate("alter table "+tableProcess.getLeftTable().getTable().getTableName()+" add ("+column.getName()+" "+column.getDataType().dbtype+"("+column.getDataType().len+")) ");
+                    statement.executeUpdate("alter table "+tableProcess.getCurentTable().getTableName()+" add ("+column.getName()+" "+column.getDataType().dbtype+"("+column.getDataType().len+")) ");
                 }catch(SQLException e){
-                    System.out.println(tableProcess.getLeftTable().getTable().getTableName()+"已经存在'"+column.getName()+"'列\n"+e.getMessage());
+                    System.out.println(tableProcess.getCurentTable().getTableName()+"已经存在'"+column.getName()+"'列\n"+e.getMessage());
                 }
             }
         } catch (Exception e) {

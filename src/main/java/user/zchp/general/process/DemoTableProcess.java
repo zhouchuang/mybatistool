@@ -14,6 +14,7 @@ import user.zchp.general.pipeline.FileExport;
 @Data
 public class DemoTableProcess implements TableProcess {
 
+    private Table currentTable;
     private LeftTable leftTable;
     public DemoTableProcess(LeftTable leftTable){
         this.leftTable = leftTable;
@@ -49,6 +50,15 @@ public class DemoTableProcess implements TableProcess {
         return leftTable;
     }
 
+    @Override
+    public Table getCurentTable() {
+        return currentTable;
+    }
+
+    @Override
+    public void setCurrentTable(Table table) {
+        this.currentTable = table;
+    }
 
     public static void main(String[] args) {
         LeftTable leftTable  = new LeftTable() ;

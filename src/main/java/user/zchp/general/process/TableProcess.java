@@ -4,6 +4,7 @@ import com.alibaba.druid.sql.visitor.functions.Left;
 import user.zchp.general.Machine;
 import user.zchp.general.component.ClassModel;
 import user.zchp.general.component.LeftTable;
+import user.zchp.general.component.Table;
 import user.zchp.general.component.TableConfig;
 
 /**
@@ -21,4 +22,8 @@ public interface TableProcess {
     TableConfig getConfig();
 
     LeftTable getLeftTable();
+
+    Table getCurentTable();
+
+    void setCurrentTable(Table table);
 }
