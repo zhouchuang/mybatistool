@@ -1,9 +1,6 @@
 package user.zchp.general;
 
-import user.zchp.general.assemble.Assemble;
-import user.zchp.general.assemble.DaoAssemble;
-import user.zchp.general.assemble.MapperAssemble;
-import user.zchp.general.assemble.ModelAssemble;
+import user.zchp.general.assemble.*;
 import user.zchp.general.component.ClassModel;
 import user.zchp.general.component.TemplateInfo;
 import user.zchp.general.pipeline.Pipeline;
@@ -53,15 +50,16 @@ public class Machine{
             TemplateInfo modelClassTemplate = new ModelAssemble().process(classModel);
             TemplateInfo daoClassTemplate = new DaoAssemble().process(classModel);
             TemplateInfo mapperTemplate = new MapperAssemble().process(classModel);
+            TemplateInfo serviceTemplate = new ServiceAssemble().process(classModel);
             templateInfos.add(modelClassTemplate);
             templateInfos.add(daoClassTemplate);
             templateInfos.add(mapperTemplate);
+            templateInfos.add(serviceTemplate);
             for (Pipeline pipeline : pipelineList) {
                 pipeline.process(templateInfos);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 }

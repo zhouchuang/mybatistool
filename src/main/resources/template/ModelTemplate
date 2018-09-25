@@ -1,6 +1,6 @@
 package ${packageName}.models;
 
-import user.zchp.utils.BaseEntity;
+import ${packageName}.utils.BaseEntity;
 import lombok.Data;
 
 //表名称 ${tableName}
