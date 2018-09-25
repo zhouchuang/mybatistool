@@ -1,16 +1,15 @@
 package user.zchp.general;
 
 import user.zchp.general.assemble.Assemble;
-import user.zchp.general.assemble.ClassAssemble;
+import user.zchp.general.assemble.DaoAssemble;
+import user.zchp.general.assemble.MapperAssemble;
+import user.zchp.general.assemble.ModelAssemble;
 import user.zchp.general.component.ClassModel;
-import user.zchp.general.component.ColumnInfo;
 import user.zchp.general.component.TemplateInfo;
 import user.zchp.general.pipeline.Pipeline;
-import user.zchp.general.process.DemoTableProcess;
 import user.zchp.general.process.TableProcess;
 import user.zchp.general.resource.MysqlDataResource;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +50,12 @@ public class Machine{
     public void processTable(){
         try{
             ClassModel classModel  = MysqlDataResource.getInstance().addBaseColumn(this.tableProcess).getClassModel(this.tableProcess);
-            TemplateInfo modelClassTemplate = new ClassAssemble().process(classModel);
+            TemplateInfo modelClassTemplate = new ModelAssemble().process(classModel);
+            TemplateInfo daoClassTemplate = new DaoAssemble().process(classModel);
+            TemplateInfo mapperTemplate = new MapperAssemble().process(classModel);
             templateInfos.add(modelClassTemplate);
+            templateInfos.add(daoClassTemplate);
+            templateInfos.add(mapperTemplate);
             for (Pipeline pipeline : pipelineList) {
                 pipeline.process(templateInfos);
             }

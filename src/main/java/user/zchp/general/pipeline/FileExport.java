@@ -23,7 +23,7 @@ public class FileExport implements Pipeline{
                 if(!fgroup.exists()){
                     fgroup.mkdirs();
                 }
-                File fout = new File(templateInfo.getPath()+File.separator+templateInfo.getClassName()+".java");
+                File fout = new File(templateInfo.getPath()+File.separator+templateInfo.getClassName()+"."+templateInfo.getExtName());
                 if(fout.exists()){
                     fout.delete();
                 }
@@ -34,6 +34,5 @@ public class FileExport implements Pipeline{
                 e.printStackTrace();
             }
         }
-
     }
 }

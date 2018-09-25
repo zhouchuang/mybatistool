@@ -3,8 +3,6 @@ package user.zchp.general.assemble;
 import user.zchp.general.component.ClassModel;
 import user.zchp.general.component.Column;
 import user.zchp.general.component.TemplateInfo;
-import user.zchp.general.process.DemoTableProcess;
-import user.zchp.service.DictCacheService;
 
 import java.io.File;
 
@@ -14,14 +12,16 @@ import java.io.File;
  * @author zhouchuang
  * @create 2018-09-08 19:46
  */
-public class ClassAssemble extends AbstractAssemble {
+public class ModelAssemble extends AbstractAssemble {
 
     public final static String PackageName="models";
-    public ClassAssemble(){
-        this.templatePath = ClassAssemble.class.getResource("/").getPath()+"template"+ File.separator+"ClassTemplate";
+
+    public String getTemplateName(){
+        return "ModelTemplate";
     }
+
     public TemplateInfo process(ClassModel classModel) {
-        TemplateInfo templateInfo = new TemplateInfo();
+        TemplateInfo templateInfo = getTemplateInfo();
         try{
             templateInfo.setPath(classModel.getPath()+File.separator+classModel.getPackageName().replace(".",File.separator)+File.separator+PackageName);
             templateInfo.setClassName(classModel.getClassName());

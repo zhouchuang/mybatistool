@@ -2,13 +2,8 @@ package user.zchp.general.process;
 
 import lombok.Data;
 import user.zchp.general.Machine;
-import user.zchp.general.assemble.AbstractAssemble;
-import user.zchp.general.assemble.ClassAssemble;
 import user.zchp.general.component.*;
-import user.zchp.general.pipeline.Console;
 import user.zchp.general.pipeline.FileExport;
-
-import java.io.File;
 
 /**
  * 处理模板

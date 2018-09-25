@@ -1,0 +1,10 @@
+package ${packageName}.dao;
+
+
+import java.util.HashMap;
+import java.util.List;
+import user.zchp.utils.PageParam;
+
+public interface ${className}Dao extends Dao {
+
+}

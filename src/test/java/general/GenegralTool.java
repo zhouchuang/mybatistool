@@ -476,6 +476,7 @@ public class GenegralTool {
 			classString  =  classString.replace("${tableName}", cm.getTableName());
 			classString  =  classString.replace("${className}", cm.getClassName());
 			classString  =  classString.replace("${function}", function.toString());
+			//System.out.println(classString);
 
 			File fgroup  = new File(DictCacheService.OUT_JAVA_PATH+File.separator+packageName.replace(".",File.separator)+File.separator+"models");
 			if(!fgroup.exists()){
