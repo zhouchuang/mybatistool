@@ -6,6 +6,7 @@ import user.zchp.general.assemble.AbstractAssemble;
 import user.zchp.general.assemble.ClassAssemble;
 import user.zchp.general.component.*;
 import user.zchp.general.pipeline.Console;
+import user.zchp.general.pipeline.FileExport;
 
 import java.io.File;
 
@@ -30,8 +31,9 @@ public class DemoTableProcess implements TableProcess {
             .addDefaultColumn(new Column(DataType.Boolean,"isDeleted"))
             .setPk(new Column(DataType.String,"id"))
             .setVersion(new Column(DataType.Integer,"version"))
-            .setDefaultPath("user.zc")
-            .setDatabase("tool");
+            .setBasePackage("user.zc")
+            .setDatabase("tool")
+            .setBasePath("C:/mybatistool");
 
     @Override
     public void process() {
@@ -59,7 +61,7 @@ public class DemoTableProcess implements TableProcess {
         table.setTableName("test");
         leftTable.setTable(table);
         Machine.create(new DemoTableProcess(leftTable))
-                .addPiplineList(new Console())
+                .addPiplineList(new FileExport())
                 .run();
     }
 }

@@ -15,7 +15,7 @@ public class ClassModel {
 	private String updateBy;
 	private String updateTime;
 	private List<Column> list = new ArrayList<Column>();
-
+	private String path;
 
 	public String getCreateBy() {
 		return createBy;
@@ -107,5 +107,10 @@ public class ClassModel {
 		if(abbr.length()==0)abbr = "t";
 		return abbr;
 	}
-	
+	public void setPath(String path){
+		this.path = path;
+	}
+	public String getPath(){
+		return this.path;
+	}
 }

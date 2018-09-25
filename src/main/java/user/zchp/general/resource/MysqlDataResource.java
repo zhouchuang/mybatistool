@@ -53,8 +53,9 @@ public class MysqlDataResource extends AbstractDataResource {
             DatabaseMetaData metaData = conn.getMetaData();
             ResultSet rs = metaData.getColumns(conn.getCatalog(), username, tableProcess.getLeftTable().getTable().getTableName(), null);
             cm.setName(StringUtils.getFirstCharToLower(tableProcess.getLeftTable().getTable().getName()));
-            cm.setPackageName(tableProcess.getConfig().getBasePath());
+            cm.setPackageName(tableProcess.getConfig().getBasePackage());
             cm.setTableName(tableProcess.getLeftTable().getTable().getTableName());
+            cm.setPath(tableProcess.getConfig().getBasePath());
             while(rs.next()) {
                 Column column = new Column();
                 column.setColumnSize(Integer.parseInt(rs.getString("DECIMAL_DIGITS")!=null?rs.getString("DECIMAL_DIGITS"):"0"));

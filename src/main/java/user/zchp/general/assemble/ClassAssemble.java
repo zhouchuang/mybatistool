@@ -4,6 +4,7 @@ import user.zchp.general.component.ClassModel;
 import user.zchp.general.component.Column;
 import user.zchp.general.component.TemplateInfo;
 import user.zchp.general.process.DemoTableProcess;
+import user.zchp.service.DictCacheService;
 
 import java.io.File;
 
@@ -15,14 +16,14 @@ import java.io.File;
  */
 public class ClassAssemble extends AbstractAssemble {
 
+    public final static String PackageName="models";
     public ClassAssemble(){
         this.templatePath = ClassAssemble.class.getResource("/").getPath()+"template"+ File.separator+"ClassTemplate";
-        this.path = "/";
     }
     public TemplateInfo process(ClassModel classModel) {
         TemplateInfo templateInfo = new TemplateInfo();
         try{
-            templateInfo.setPath(this.path);
+            templateInfo.setPath(classModel.getPath()+File.separator+classModel.getPackageName().replace(".",File.separator)+File.separator+PackageName);
             templateInfo.setClassName(classModel.getClassName());
             StringBuffer  stringBuffer = read(templatePath);
             StringBuffer function= new StringBuffer();

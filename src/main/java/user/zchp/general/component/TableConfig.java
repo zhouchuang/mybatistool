@@ -16,8 +16,9 @@ public class TableConfig {
     Column pk;
     Column version;
     List<Column> defaultColumnList = new ArrayList<Column>();
-    String basePath ;
+    String basePackage ;
     String database ;
+    String basePath;
     public static TableConfig me(){
         return new TableConfig();
     }
@@ -25,15 +26,18 @@ public class TableConfig {
         this.defaultColumnList.add(column);
         return this;
     }
-    public TableConfig setDefaultPath(String path){
-        this.basePath = path;
+    public TableConfig setBasePackage(String basePackage){
+        this.basePackage = basePackage;
         return this;
     }
     public TableConfig setDatabase(String database){
         this.database = database;
         return this;
     }
-
+    public TableConfig setBasePath(String basePath){
+        this.basePath  = basePath;
+        return this;
+    }
     public  Boolean isBaseColumn(String name){
         for(Column column : this.defaultColumnList){
             if(column.getName().equalsIgnoreCase(name)){
