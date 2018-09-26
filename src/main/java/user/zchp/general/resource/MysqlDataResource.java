@@ -31,8 +31,10 @@ public class MysqlDataResource extends AbstractDataResource {
 
     private Map getComments(TableProcess tableProcess){
         Map<String,String> comments = new HashMap<String,String>();
+        Connection conn = null;
         try{
-            Statement colmunment = getConn().createStatement();
+            conn = getConn();
+            Statement colmunment = conn.createStatement();
             ResultSet result = colmunment.executeQuery("select COLUMN_NAME,column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableProcess.getCurentTable().getTableName()+"' and table_schema='"+tableProcess.getConfig().getDatabase()+"'");
             while(result.next()){
                 comments.put(result.getString("COLUMN_NAME"), result.getString("column_comment"));
@@ -40,7 +42,7 @@ public class MysqlDataResource extends AbstractDataResource {
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            releaseConn();
+            releaseConn(conn);
         }
         return comments;
     }
@@ -48,8 +50,9 @@ public class MysqlDataResource extends AbstractDataResource {
     public ClassModel getClassModel(TableProcess tableProcess){
         Map<String,String> comments  = getComments(tableProcess);
         ClassModel cm  = new ClassModel();
+        Connection conn = null;
         try{
-            Connection conn = getConn();
+            conn = getConn();
             DatabaseMetaData metaData = conn.getMetaData();
             ResultSet rs = metaData.getColumns(conn.getCatalog(), username, tableProcess.getCurentTable().getTableName(), null);
             cm.setName(StringUtils.getFirstCharToLower(tableProcess.getCurentTable().getName()));
@@ -74,15 +77,17 @@ public class MysqlDataResource extends AbstractDataResource {
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            releaseConn();
+            releaseConn(conn);
         }
         return cm;
     }
 
     //新增基本列
     public MysqlDataResource addBaseColumn(TableProcess tableProcess){
+        Connection conn = null;
         try {
-            Statement  statement = getConn().createStatement();
+            conn = getConn();
+            Statement  statement = conn.createStatement();
             List<Column> columnList = tableProcess.getConfig().getDefaultColumnList();
             for(Column column : columnList){
                 try{

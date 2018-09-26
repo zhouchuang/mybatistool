@@ -22,12 +22,14 @@ public abstract class AbstractDataResource implements DataResource {
     public String username;
     public String password;
     public Connection conn = null;
-
+    private static int initCount = 5;//初始化连接数
+    private static int maxCount = 10;//最大连接数
+    private static int currentCount = 5;//当前连接数
     public AbstractDataResource(){
         init();
     }
 
-    private LinkedList<Connection> linkedList;
+    private LinkedList<Connection> connectPoll;
 
     @PostConstruct
     public void init(){
@@ -44,28 +46,58 @@ public abstract class AbstractDataResource implements DataResource {
             username = (String)properties.get("business.jdbc.username");
             password = (String)properties.get("business.jdbc.password");
 
-            linkedList = new LinkedList<Connection>();
-
+            initConnnectPoll();
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
+
+    private void initConnnectPoll()throws ClassNotFoundException{
+        //加载驱动
+        Class.forName(driver);
+        //初始化5个
+        connectPoll = new LinkedList<Connection>();
+        try {
+            for(int i=0; i<=initCount; i++){//初始化生成5个数据库连接
+                connectPoll.addLast(this.createConnection());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Connection createConnection() throws SQLException{
+        return DriverManager.getConnection(url, username, password);
+    }
+
+
+
     @Override
     public Connection getConn()throws Exception{
-        Class.forName(driver);// 动态加载mysql驱动
+        /*Class.forName(driver);// 动态加载mysql驱动
         conn =   DriverManager.getConnection(url,username,password);
-        return conn;
+        return conn;*/
+
+        synchronized (connectPoll) {//多线程并发处理
+            if(connectPoll.size() > 0){
+                return connectPoll.removeFirst();
+            }else if(currentCount < maxCount){
+                //未超过最大连接数，则新建连接
+                Connection  conn = createConnection();
+                connectPoll.add(conn);
+                currentCount++;
+                return conn;
+            }else{
+                throw new SQLException("连接已经用完");
+            }
+        }
     }
 
     @Override
     public void releaseConn(Connection conn){
         if(conn!=null){
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            connectPoll.addLast(conn);
         }
     }
 
