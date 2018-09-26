@@ -59,7 +59,7 @@ public class Column {
     }
 
     private String getMapperdType(String str)throws Exception{
-        System.out.println(str);
+//        System.out.println(str);
         this.jdbcColumnType = str;
         if(str.equals("BIGINT")){
             return "Long";

@@ -93,7 +93,7 @@ public class MysqlDataResource extends AbstractDataResource {
                 try{
                     statement.executeUpdate("alter table "+tableProcess.getCurentTable().getTableName()+" add ("+column.getName()+" "+column.getDataType().dbtype+"("+column.getDataType().len+")) ");
                 }catch(SQLException e){
-                    System.out.println(tableProcess.getCurentTable().getTableName()+"已经存在'"+column.getName()+"'列\n"+e.getMessage());
+//                    System.out.println(tableProcess.getCurentTable().getTableName()+"已经存在'"+column.getName()+"'列\n"+e.getMessage());
                 }
             }
         } catch (Exception e) {

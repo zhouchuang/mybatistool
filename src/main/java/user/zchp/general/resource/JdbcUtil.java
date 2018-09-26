@@ -29,6 +29,10 @@ public class JdbcUtil {
         private static final JdbcUtil INSTANCE = new JdbcUtil();
     }
 
+    static {
+        getInstance();
+    }
+
     private JdbcUtil (){
         try {
             Properties properties=new Properties();
