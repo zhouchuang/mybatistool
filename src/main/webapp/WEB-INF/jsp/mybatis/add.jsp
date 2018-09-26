@@ -73,7 +73,7 @@
         }
         new Promise(function(callback){
             if(tablelist.length==0) {
-                $.getJSON("/TableController/TableList?database=tool",function(data){
+                $.getJSON("/TableController/TableList",function(data){
                     tablelist = [].concat(data.data);
                     callback(tablelist);
                 });

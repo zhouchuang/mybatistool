@@ -45,9 +45,9 @@ public class TableController {
 
     @RequestMapping(value = "/TableList")
     @ResponseBody
-    public Result tableList(String database ){
+    public Result tableList(){
         Result result = new Result();
-        List<String> list = businessTableService.tableList(database);
+        List<String> list = businessTableService.tableList(businessTableService.username);
         result.setData(list);
         return result;
     }
