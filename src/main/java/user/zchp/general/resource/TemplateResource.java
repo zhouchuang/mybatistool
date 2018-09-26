@@ -1,8 +1,6 @@
 package user.zchp.general.resource;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 
 /**
  * template文件读取类
@@ -25,14 +23,14 @@ public class TemplateResource implements FileResource {
     public StringBuffer read(String path) throws Exception {
         StringBuffer sb = new StringBuffer();
         File f = new File(path);
-        FileReader fr = new FileReader(f);
-        BufferedReader br = new BufferedReader(fr);
+        InputStreamReader isr = new InputStreamReader(new FileInputStream(f), "UTF-8");
+        BufferedReader br = new BufferedReader(isr);
         String s;
         while ((s = br.readLine()) != null) {
             sb.append(s + "\n\r");
         }
         br.close();
-        fr.close();
+        isr.close();
         return sb;
     }
 

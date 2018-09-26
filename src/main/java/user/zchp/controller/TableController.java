@@ -12,6 +12,7 @@ import user.zchp.general.pipeline.Console;
 import user.zchp.general.pipeline.FileExport;
 import user.zchp.general.process.DemoTableProcess;
 import user.zchp.general.component.LeftTable;
+import user.zchp.general.resource.JdbcUtil;
 import user.zchp.models.TableInfo;
 import user.zchp.service.TableInfoService;
 import user.zchp.service.BusinessTableService;
@@ -47,7 +48,7 @@ public class TableController {
     @ResponseBody
     public Result tableList(){
         Result result = new Result();
-        List<String> list = businessTableService.tableList(businessTableService.username);
+        List<String> list = businessTableService.tableList(JdbcUtil.getInstance().username);
         result.setData(list);
         return result;
     }

@@ -54,7 +54,7 @@ public class MysqlDataResource extends AbstractDataResource {
         try{
             conn = getConn();
             DatabaseMetaData metaData = conn.getMetaData();
-            ResultSet rs = metaData.getColumns(conn.getCatalog(), username, tableProcess.getCurentTable().getTableName(), null);
+            ResultSet rs = metaData.getColumns(conn.getCatalog(), JdbcUtil.getInstance().username, tableProcess.getCurentTable().getTableName(), null);
             cm.setName(StringUtils.getFirstCharToLower(tableProcess.getCurentTable().getName()));
             cm.setPackageName(tableProcess.getConfig().getBasePackage());
             cm.setTableName(tableProcess.getCurentTable().getTableName());
@@ -99,7 +99,7 @@ public class MysqlDataResource extends AbstractDataResource {
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
-            releaseConn();
+            releaseConn(conn);
         }
         return this;
     }
