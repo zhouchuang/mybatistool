@@ -2,6 +2,7 @@ package user.zchp.general.assemble;
 
 import user.zchp.general.component.ClassModel;
 import user.zchp.general.component.Column;
+import user.zchp.general.component.TableConfig;
 import user.zchp.general.component.TemplateInfo;
 
 import java.io.File;
@@ -14,16 +15,18 @@ import java.io.File;
  */
 public class ModelAssemble extends AbstractAssemble {
 
-    public final static String PackageName="models";
+    public ModelAssemble(TableConfig tableConfig) {
+        super(tableConfig);
+    }
 
     public String getTemplateName(){
         return "ModelTemplate";
     }
 
+    public String getPackageName(){return "models";}
+
     public TemplateInfo process(ClassModel classModel) {
-        TemplateInfo templateInfo = getTemplateInfo();
         try{
-            templateInfo.setPath(classModel.getPath()+File.separator+classModel.getPackageName().replace(".",File.separator)+File.separator+PackageName);
             templateInfo.setClassName(classModel.getClassName());
             StringBuffer  stringBuffer = read(templatePath);
             StringBuffer function= new StringBuffer();

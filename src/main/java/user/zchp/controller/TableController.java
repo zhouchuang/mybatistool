@@ -48,7 +48,7 @@ public class TableController {
     @ResponseBody
     public Result tableList(){
         Result result = new Result();
-        List<String> list = businessTableService.tableList(JdbcUtil.getInstance().username);
+        List<String> list = businessTableService.tableList(JdbcUtil.getInstance().database);
         result.setData(list);
         return result;
     }

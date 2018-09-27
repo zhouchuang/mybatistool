@@ -2,6 +2,7 @@ package user.zchp.general.assemble;
 
 import user.zchp.general.component.ClassModel;
 import user.zchp.general.component.Column;
+import user.zchp.general.component.TableConfig;
 import user.zchp.general.component.TemplateInfo;
 
 import java.io.File;
@@ -14,17 +15,19 @@ import java.lang.reflect.Field;
  * @create 2018-09-25 14:28
  */
 public class DaoAssemble  extends AbstractAssemble {
-    public final static String PackageName="dao";
+
+    public DaoAssemble(TableConfig tableConfig) {
+        super(tableConfig);
+    }
 
     public String getTemplateName(){
         return "DaoTemplate";
     }
+    public String getPackageName(){return "dao";}
 
     @Override
     public TemplateInfo process(ClassModel classModel) {
-        TemplateInfo templateInfo = getTemplateInfo();
         try{
-            templateInfo.setPath(classModel.getPath()+ File.separator+classModel.getPackageName().replace(".",File.separator)+File.separator+PackageName);
             templateInfo.setClassName(classModel.getClassName()+"Dao");
             StringBuffer  stringBuffer = read(templatePath);
             String classString = stringBuffer.toString();

@@ -2,6 +2,7 @@ package user.zchp.general.assemble;
 
 import user.zchp.general.component.ClassModel;
 import user.zchp.general.component.Column;
+import user.zchp.general.component.TableConfig;
 import user.zchp.general.component.TemplateInfo;
 
 import java.io.File;
@@ -19,24 +20,28 @@ import java.util.regex.Pattern;
  */
 public class MapperAssemble extends AbstractAssemble {
 
-    public final static String PackageName="mapper";
+    public MapperAssemble(TableConfig tableConfig) {
+        super(tableConfig);
+        templateInfo.setPath(tableConfig.getBasePath()+ File.separator+getProPath()+File.separator+getPackageName());
+    }
 
     public String getTemplateName(){
         return "MapperTemplate";
     }
 
+    public String getPackageName(){return "mapper";}
+
     public String getExtName(){
         return "xml";
     }
 
+    public String getProPath(){return "src\\main\\resources\\";}
+
     public TemplateInfo process(ClassModel classModel) {
-        TemplateInfo templateInfo = getTemplateInfo();
         try{
-            templateInfo.setPath(classModel.getPath()+File.separator+classModel.getPackageName().replace(".",File.separator)+File.separator+PackageName);
             templateInfo.setClassName(classModel.getClassName()+"Dao");
             StringBuffer  stringBuffer = read(templatePath);
             String classString = stringBuffer.toString();
-
             Field[] fields = classModel.getClass().getDeclaredFields();
             for(Field field : fields ){
                 if(field.getType().getName().equals("java.lang.String"))

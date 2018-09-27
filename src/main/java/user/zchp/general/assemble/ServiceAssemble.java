@@ -1,6 +1,7 @@
 package user.zchp.general.assemble;
 
 import user.zchp.general.component.ClassModel;
+import user.zchp.general.component.TableConfig;
 import user.zchp.general.component.TemplateInfo;
 
 import java.io.File;
@@ -13,17 +14,20 @@ import java.lang.reflect.Field;
  * @create 2018-09-25 14:28
  */
 public class ServiceAssemble extends AbstractAssemble {
-    public final static String PackageName="service";
+
+    public ServiceAssemble(TableConfig tableConfig) {
+        super(tableConfig);
+    }
 
     public String getTemplateName(){
         return "ServiceTemplate";
     }
 
+    public String getPackageName(){return "service";}
+
     @Override
     public TemplateInfo process(ClassModel classModel) {
-        TemplateInfo templateInfo = getTemplateInfo();
         try{
-            templateInfo.setPath(classModel.getPath()+ File.separator+classModel.getPackageName().replace(".",File.separator)+File.separator+PackageName);
             templateInfo.setClassName(classModel.getClassName()+"Service");
             StringBuffer  stringBuffer = read(templatePath);
             String classString = stringBuffer.toString();

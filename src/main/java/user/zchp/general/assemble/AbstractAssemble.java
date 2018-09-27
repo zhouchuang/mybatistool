@@ -1,6 +1,8 @@
 package user.zchp.general.assemble;
 
 import lombok.Data;
+import user.zchp.general.component.ClassModel;
+import user.zchp.general.component.TableConfig;
 import user.zchp.general.component.TemplateInfo;
 import user.zchp.general.resource.FileResource;
 import user.zchp.general.resource.TemplateResource;
@@ -24,7 +26,8 @@ public abstract class AbstractAssemble implements Assemble {
     protected String path;
     protected String className;
     protected String templateName;
-    protected String proPath = "src\\main\\java\\com";
+    protected String proPath = "src\\main\\java\\";
+    protected String packageName="dao";
     public StringBuffer read(String path)throws Exception{
         StringBuffer stringBuffer = TemplateResource.getInstance().read(path);
         return stringBuffer;
@@ -40,10 +43,13 @@ public abstract class AbstractAssemble implements Assemble {
     protected String getExtName(){
         return this.extName;
     }
+    protected String getProPath(){return this.proPath;}
+    protected String getPackageName(){return this.packageName;}
 
-    public AbstractAssemble(){
+    public AbstractAssemble(TableConfig tableConfig){
         this.templatePath = ModelAssemble.class.getResource("/").getPath()+"template"+ File.separator+getTemplateName();
         templateInfo = new TemplateInfo();
         templateInfo.setExtName(getExtName());
+        templateInfo.setPath(tableConfig.getBasePath()+ File.separator+getProPath()+tableConfig.getBasePackage().replace(".",File.separator)+File.separator+getPackageName());
     }
 }

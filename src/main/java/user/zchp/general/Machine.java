@@ -65,10 +65,10 @@ public class Machine{
         try{
             this.tableProcess.setCurrentTable(table);
             ClassModel classModel  = MysqlDataResource.getInstance().addBaseColumn(this.tableProcess).getClassModel(this.tableProcess);
-            TemplateInfo modelClassTemplate = new ModelAssemble().process(classModel);
-            TemplateInfo daoClassTemplate = new DaoAssemble().process(classModel);
-            TemplateInfo mapperTemplate = new MapperAssemble().process(classModel);
-            TemplateInfo serviceTemplate = new ServiceAssemble().process(classModel);
+            TemplateInfo modelClassTemplate = new ModelAssemble(this.tableProcess.getConfig()).process(classModel);
+            TemplateInfo daoClassTemplate = new DaoAssemble(this.tableProcess.getConfig()).process(classModel);
+            TemplateInfo serviceTemplate = new ServiceAssemble(this.tableProcess.getConfig()).process(classModel);
+            TemplateInfo mapperTemplate = new MapperAssemble(this.tableProcess.getConfig()).process(classModel);
             templateInfos.add(modelClassTemplate);
             templateInfos.add(daoClassTemplate);
             templateInfos.add(mapperTemplate);
