@@ -48,7 +48,7 @@ public class JdbcUtil {
             username = (String)properties.get("business.jdbc.username");
             password = (String)properties.get("business.jdbc.password");
             database = (String)properties.get("business.jdbc.database");
-            System.out.println("初始化数据库");
+            System.out.println("初始化数据库连接池");
             Class.forName(driver);
             connectPoll = new LinkedList<Connection>();
             try {
@@ -58,6 +58,7 @@ public class JdbcUtil {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            System.out.println("初始化数据库连接池完成");
         } catch (Exception e) {
             e.printStackTrace();
         }

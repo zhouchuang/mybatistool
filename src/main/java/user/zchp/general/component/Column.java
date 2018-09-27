@@ -59,11 +59,10 @@ public class Column {
     }
 
     private String getMapperdType(String str)throws Exception{
-//        System.out.println(str);
         this.jdbcColumnType = str;
         if(str.equals("BIGINT")){
             return "Long";
-        }else if(str.equals("VARCHAR")  || str.equals("TEXT")){
+        }else if(str.equals("VARCHAR")  || str.equals("TEXT") || str.equals("MEDIUMTEXT")){
             return "String";
         }else if(str.equals("VARCHAR2")){
             this.jdbcColumnType = "VARCHAR";
@@ -114,7 +113,7 @@ public class Column {
                 return "Integer";
             }
         }
-        throw new  Exception("没有找到对应类型");
+        throw new  Exception("没有找到对应类型："+str);
     }
 
 
