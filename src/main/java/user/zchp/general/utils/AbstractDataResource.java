@@ -1,7 +1,6 @@
 package user.zchp.general.utils;
 
 import user.zchp.general.resource.DataResource;
-import user.zchp.general.utils.JdbcUtil;
 
 import java.sql.Connection;
 
@@ -17,11 +16,11 @@ public abstract class AbstractDataResource implements DataResource {
     }
     @Override
     public Connection getConn()throws Exception{
-        return SpringResource.getJdbcUtil().getConn();
+        return PropertiesAndJdbcUtil.getInstance().getConn();
     }
 
     @Override
     public void releaseConn(Connection conn){
-        SpringResource.getJdbcUtil().releaseConn(conn);
+        PropertiesAndJdbcUtil.getInstance().releaseConn(conn);
     }
 }

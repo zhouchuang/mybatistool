@@ -11,8 +11,7 @@ import user.zchp.general.Machine;
 import user.zchp.general.pipeline.FileExport;
 import user.zchp.general.process.DemoTableProcess;
 import user.zchp.general.component.LeftTable;
-import user.zchp.general.utils.JdbcUtil;
-import user.zchp.general.utils.SpringResource;
+import user.zchp.general.utils.PropertiesAndJdbcUtil;
 import user.zchp.models.TableInfo;
 import user.zchp.service.TableInfoService;
 import user.zchp.service.BusinessTableService;
@@ -48,7 +47,7 @@ public class TableController {
     @ResponseBody
     public Result tableList(){
         Result result = new Result();
-        List<String> list = businessTableService.tableList(SpringResource.getJdbcUtil().database);
+        List<String> list = businessTableService.tableList(PropertiesAndJdbcUtil.getInstance().getDatabase());
         result.setData(list);
         return result;
     }
