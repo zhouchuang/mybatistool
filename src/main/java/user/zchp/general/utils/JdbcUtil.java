@@ -1,14 +1,11 @@
-package user.zchp.general.resource;
+package user.zchp.general.utils;
 
 import org.springframework.stereotype.Component;
-import user.zchp.service.BusinessTableService;
 import javax.annotation.PostConstruct;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.LinkedList;
-import java.util.Properties;
 
 /**
  * JDBC工具类
@@ -16,10 +13,10 @@ import java.util.Properties;
  * @author:Administrator
  * @create 2018-09-26 16:23
  */
-
 @Component
-public class JdbcUtil {
+public class JdbcUtil  {
 
+    public String iocName = "jdbcUtil";
     private  String driver;
     private  String url ;
     private  String username;
@@ -30,26 +27,10 @@ public class JdbcUtil {
     private  int maxCount = 5;//最大连接数
     private  int currentCount = 1;//当前连接数
 
-    private static class JdbcUtilHolder {
-        private static final JdbcUtil INSTANCE = new JdbcUtil();
-    }
-
-    private JdbcUtil (){
+    @PostConstruct
+    public void  init (){
         try {
-            Properties properties=new Properties();
-            //获得输入流
-            InputStream is=BusinessTableService.class.getClassLoader().getResourceAsStream("jdbc.properties");
-            System.out.println("正在读取文件");
-            properties.load(is);
-            System.out.println("成功读取");
-            is.close();
-            driver = (String)properties.get("business.jdbc.driver");
-            url = (String)properties.get("business.jdbc.url");
-            username = (String)properties.get("business.jdbc.username");
-            password = (String)properties.get("business.jdbc.password");
-            database = (String)properties.get("business.jdbc.database");
-            System.out.println("初始化数据库连接池");
-            Class.forName(driver);
+            Class.forName(SpringResource.getPropertiesUtil().getDriver());
             connectPoll = new LinkedList<Connection>();
             try {
                 for(int i=0; i<=initCount; i++){//初始化生成5个数据库连接
@@ -64,14 +45,8 @@ public class JdbcUtil {
         }
     }
 
-    public static final JdbcUtil getInstance() {
-        return JdbcUtilHolder.INSTANCE;
-    }
-
-
-
     private   Connection createConnection() throws SQLException{
-        return DriverManager.getConnection(url, username, password);
+        return DriverManager.getConnection(SpringResource.getPropertiesUtil().getUrl(), SpringResource.getPropertiesUtil().getUsername(), SpringResource.getPropertiesUtil().getPassword());
     }
 
     Connection getConn()throws Exception{
@@ -95,6 +70,5 @@ public class JdbcUtil {
             connectPoll.addLast(conn);
         }
     }
-
 
 }

@@ -1,11 +1,8 @@
 package user.zchp.general.assemble;
 
 import user.zchp.general.component.ClassModel;
-import user.zchp.general.component.Column;
 import user.zchp.general.component.TableConfig;
 import user.zchp.general.component.TemplateInfo;
-
-import java.io.File;
 import java.lang.reflect.Field;
 
 /**

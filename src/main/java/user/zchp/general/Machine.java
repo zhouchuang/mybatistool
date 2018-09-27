@@ -9,9 +9,7 @@ import user.zchp.general.component.TemplateInfo;
 import user.zchp.general.pipeline.Pipeline;
 import user.zchp.general.process.TableProcess;
 import user.zchp.general.resource.MysqlDataResource;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

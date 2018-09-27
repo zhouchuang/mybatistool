@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import user.zchp.general.Machine;
-import user.zchp.general.pipeline.Console;
 import user.zchp.general.pipeline.FileExport;
 import user.zchp.general.process.DemoTableProcess;
 import user.zchp.general.component.LeftTable;
-import user.zchp.general.resource.JdbcUtil;
+import user.zchp.general.utils.JdbcUtil;
+import user.zchp.general.utils.SpringResource;
 import user.zchp.models.TableInfo;
 import user.zchp.service.TableInfoService;
 import user.zchp.service.BusinessTableService;
@@ -48,7 +48,7 @@ public class TableController {
     @ResponseBody
     public Result tableList(){
         Result result = new Result();
-        List<String> list = businessTableService.tableList(JdbcUtil.getInstance().database);
+        List<String> list = businessTableService.tableList(SpringResource.getJdbcUtil().database);
         result.setData(list);
         return result;
     }

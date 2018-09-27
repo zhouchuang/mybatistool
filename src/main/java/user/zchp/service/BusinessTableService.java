@@ -1,7 +1,7 @@
 package user.zchp.service;
 
 import org.springframework.stereotype.Service;
-import user.zchp.general.resource.AbstractDataResource;
+import user.zchp.general.utils.AbstractDataResource;
 
 import java.sql.*;
 import java.util.*;

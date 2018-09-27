@@ -3,7 +3,10 @@ package user.zchp.general.resource;
 import user.zchp.general.component.ClassModel;
 import user.zchp.general.component.Column;
 import user.zchp.general.process.TableProcess;
-import user.zchp.utils.StringUtils;
+import user.zchp.general.utils.AbstractDataResource;
+import user.zchp.general.utils.JdbcUtil;
+import user.zchp.general.utils.SpringResource;
+import user.zchp.general.utils.StringUtils;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -34,7 +37,7 @@ public class MysqlDataResource extends AbstractDataResource {
         try{
             conn = getConn();
             Statement colmunment = conn.createStatement();
-            ResultSet result = colmunment.executeQuery("select COLUMN_NAME,column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableProcess.getCurentTable().getTableName()+"' and table_schema='"+JdbcUtil.getInstance().database+"'");
+            ResultSet result = colmunment.executeQuery("select COLUMN_NAME,column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableProcess.getCurentTable().getTableName()+"' and table_schema='"+ SpringResource.getJdbcUtil().database+"'");
             while(result.next()){
                 comments.put(result.getString("COLUMN_NAME"), result.getString("column_comment"));
             }
@@ -53,7 +56,7 @@ public class MysqlDataResource extends AbstractDataResource {
         try{
             conn = getConn();
             DatabaseMetaData metaData = conn.getMetaData();
-            ResultSet rs = metaData.getColumns(conn.getCatalog(), JdbcUtil.getInstance().database, tableProcess.getCurentTable().getTableName(), null);
+            ResultSet rs = metaData.getColumns(conn.getCatalog(), SpringResource.getJdbcUtil().database, tableProcess.getCurentTable().getTableName(), null);
             cm.setName(StringUtils.getFirstCharToLower(tableProcess.getCurentTable().getName()));
             cm.setPackageName(tableProcess.getConfig().getBasePackage());
             cm.setTableName(tableProcess.getCurentTable().getTableName());
