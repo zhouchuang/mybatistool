@@ -15,7 +15,7 @@
 
     <!-- 扫描service包下所有使用注解的类型 -->
     <!-- cn.acheng1314为我们应用的包名,当然也是我们前面提到过的GroupId -->
-    <context:component-scan base-package="user.zchp.service" />
+    <context:component-scan base-package="user.zchp.service,user.zchp.general" />
 
     <!-- 配置事务管理器 -->
     <bean id="transactionManager"

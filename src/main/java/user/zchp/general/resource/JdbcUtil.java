@@ -1,6 +1,8 @@
 package user.zchp.general.resource;
 
+import org.springframework.stereotype.Component;
 import user.zchp.service.BusinessTableService;
+import javax.annotation.PostConstruct;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,6 +16,8 @@ import java.util.Properties;
  * @author:Administrator
  * @create 2018-09-26 16:23
  */
+
+@Component
 public class JdbcUtil {
 
     private  String driver;
@@ -29,16 +33,12 @@ public class JdbcUtil {
         private static final JdbcUtil INSTANCE = new JdbcUtil();
     }
 
-    static {
-        getInstance();
-    }
-
     private JdbcUtil (){
         try {
             Properties properties=new Properties();
             //获得输入流
             InputStream is=BusinessTableService.class.getClassLoader().getResourceAsStream("jdbc.properties");
-            System.out.println("我正在读取文件");
+            System.out.println("正在读取文件");
             properties.load(is);
             System.out.println("成功读取");
             is.close();
@@ -46,7 +46,7 @@ public class JdbcUtil {
             url = (String)properties.get("business.jdbc.url");
             username = (String)properties.get("business.jdbc.username");
             password = (String)properties.get("business.jdbc.password");
-
+            System.out.println("初始化数据库");
             Class.forName(driver);
             connectPoll = new LinkedList<Connection>();
             try {
