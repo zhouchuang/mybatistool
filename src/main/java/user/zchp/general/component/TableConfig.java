@@ -17,7 +17,6 @@ public class TableConfig {
     Column version;
     List<Column> defaultColumnList = new ArrayList<Column>();
     String basePackage ;
-    String database ;
     String basePath;
     public static TableConfig me(){
         return new TableConfig();
@@ -28,10 +27,6 @@ public class TableConfig {
     }
     public TableConfig setBasePackage(String basePackage){
         this.basePackage = basePackage;
-        return this;
-    }
-    public TableConfig setDatabase(String database){
-        this.database = database;
         return this;
     }
     public TableConfig setBasePath(String basePath){

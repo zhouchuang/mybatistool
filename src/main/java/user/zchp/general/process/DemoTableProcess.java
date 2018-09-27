@@ -28,7 +28,6 @@ public class DemoTableProcess implements TableProcess {
             .setPk(new Column(DataType.String,"id"))
             .setVersion(new Column(DataType.Integer,"version"))
             .setBasePackage("user.zc")
-            .setDatabase("tool")
             .setBasePath("C:/mybatistool");
 
     @Override

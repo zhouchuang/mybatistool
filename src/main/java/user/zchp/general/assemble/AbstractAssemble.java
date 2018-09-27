@@ -24,6 +24,7 @@ public abstract class AbstractAssemble implements Assemble {
     protected String path;
     protected String className;
     protected String templateName;
+    protected String proPath = "src\\main\\java\\com";
     public StringBuffer read(String path)throws Exception{
         StringBuffer stringBuffer = TemplateResource.getInstance().read(path);
         return stringBuffer;

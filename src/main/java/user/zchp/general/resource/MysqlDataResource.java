@@ -2,7 +2,6 @@ package user.zchp.general.resource;
 
 import user.zchp.general.component.ClassModel;
 import user.zchp.general.component.Column;
-import user.zchp.general.component.ColumnInfo;
 import user.zchp.general.process.TableProcess;
 import user.zchp.utils.StringUtils;
 
@@ -35,7 +34,7 @@ public class MysqlDataResource extends AbstractDataResource {
         try{
             conn = getConn();
             Statement colmunment = conn.createStatement();
-            ResultSet result = colmunment.executeQuery("select COLUMN_NAME,column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableProcess.getCurentTable().getTableName()+"' and table_schema='"+tableProcess.getConfig().getDatabase()+"'");
+            ResultSet result = colmunment.executeQuery("select COLUMN_NAME,column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableProcess.getCurentTable().getTableName()+"' and table_schema='"+JdbcUtil.getInstance().database+"'");
             while(result.next()){
                 comments.put(result.getString("COLUMN_NAME"), result.getString("column_comment"));
             }
@@ -54,7 +53,7 @@ public class MysqlDataResource extends AbstractDataResource {
         try{
             conn = getConn();
             DatabaseMetaData metaData = conn.getMetaData();
-            ResultSet rs = metaData.getColumns(conn.getCatalog(), JdbcUtil.getInstance().username, tableProcess.getCurentTable().getTableName(), null);
+            ResultSet rs = metaData.getColumns(conn.getCatalog(), JdbcUtil.getInstance().database, tableProcess.getCurentTable().getTableName(), null);
             cm.setName(StringUtils.getFirstCharToLower(tableProcess.getCurentTable().getName()));
             cm.setPackageName(tableProcess.getConfig().getBasePackage());
             cm.setTableName(tableProcess.getCurentTable().getTableName());

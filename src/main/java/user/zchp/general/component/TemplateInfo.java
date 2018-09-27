@@ -14,4 +14,5 @@ public class TemplateInfo {
     private String path;
     private String className;
     private String extName;
+    private String proPath;
 }

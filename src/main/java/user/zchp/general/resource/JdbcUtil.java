@@ -22,8 +22,9 @@ public class JdbcUtil {
 
     private  String driver;
     private  String url ;
-    public  String username;
+    private  String username;
     private  String password;
+    public   String database;
     private  LinkedList<Connection> connectPoll;
     private  int initCount = 1;//初始化连接数
     private  int maxCount = 5;//最大连接数
@@ -46,6 +47,7 @@ public class JdbcUtil {
             url = (String)properties.get("business.jdbc.url");
             username = (String)properties.get("business.jdbc.username");
             password = (String)properties.get("business.jdbc.password");
+            database = (String)properties.get("business.jdbc.database");
             System.out.println("初始化数据库");
             Class.forName(driver);
             connectPoll = new LinkedList<Connection>();
