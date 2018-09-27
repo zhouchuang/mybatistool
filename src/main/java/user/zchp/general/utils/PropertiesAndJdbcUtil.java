@@ -1,7 +1,6 @@
 package user.zchp.general.utils;
 
 import lombok.Data;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import user.zchp.utils.SpringContextUtil;
 
@@ -27,13 +26,7 @@ public class PropertiesAndJdbcUtil {
     private String driver;
     private String database;
     private String url;
-
-
-
-    LinkedList<Connection> connectPoll;
-    int initCount = 1;//初始化连接数
-    int maxCount = 5;//最大连接数
-    int currentCount = 1;//当前连接数
+    private JdbcUtil jdbcUtil;
 
 
     @PostConstruct
@@ -50,55 +43,65 @@ public class PropertiesAndJdbcUtil {
             username = (String)properties.get("business.jdbc.username");
             password = (String)properties.get("business.jdbc.password");
             database = (String)properties.get("business.jdbc.database");
-
-            System.out.println("初始化数据库连接池");
-            Class.forName(driver);
-            connectPoll = new LinkedList<Connection>();
-            try {
-                for(int i=0; i<=initCount; i++){//初始化生成5个数据库连接
-                    connectPoll.addLast(createConnection());
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            jdbcUtil = new JdbcUtil();
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
+    class JdbcUtil{
+        private LinkedList<Connection> connectPoll;
+        private int initCount = 1;//初始化连接数
+        private int maxCount = 5;//最大连接数
+        private int currentCount = 1;//当前连接数
 
-    private   Connection createConnection() throws SQLException{
-        return DriverManager.getConnection(url, username, password);
-    }
-
-    Connection getConn()throws Exception{
-        synchronized (connectPoll) {//多线程并发处理
-            if(connectPoll.size() > 0){
-                return connectPoll.removeFirst();
-            }else if(currentCount < maxCount){
-                //未超过最大连接数，则新建连接
-                Connection  conn = createConnection();
-                connectPoll.add(conn);
-                currentCount++;
-                return conn;
-            }else{
-                throw new SQLException("连接已经用完");
+        public JdbcUtil(){
+            try{
+                System.out.println("初始化数据库连接池");
+                Class.forName(driver);
+                connectPoll = new LinkedList<Connection>();
+                try {
+                    for(int i=0; i<=initCount; i++){//初始化生成5个数据库连接
+                        connectPoll.addLast(createConnection());
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
         }
-    }
 
-    void releaseConn(Connection conn){
-        if(conn!=null){
-            connectPoll.addLast(conn);
+
+        private   Connection createConnection() throws SQLException{
+            return DriverManager.getConnection(url, username, password);
         }
+
+        Connection getConn()throws Exception{
+            synchronized (connectPoll) {//多线程并发处理
+                if(connectPoll.size() > 0){
+                    return connectPoll.removeFirst();
+                }else if(currentCount < maxCount){
+                    //未超过最大连接数，则新建连接
+                    Connection  conn = createConnection();
+                    connectPoll.add(conn);
+                    currentCount++;
+                    return conn;
+                }else{
+                    throw new SQLException("连接已经用完");
+                }
+            }
+        }
+
+        void releaseConn(Connection conn){
+            if(conn!=null){
+                connectPoll.addLast(conn);
+            }
+        }
+
     }
-
-
-
     public static PropertiesAndJdbcUtil getInstance(){
         PropertiesAndJdbcUtil instance = SpringContextUtil.getBean("propertiesAndJdbcUtil");
         return instance;
     }
-
-
 }

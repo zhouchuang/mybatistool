@@ -16,11 +16,11 @@ public abstract class AbstractDataResource implements DataResource {
     }
     @Override
     public Connection getConn()throws Exception{
-        return PropertiesAndJdbcUtil.getInstance().getConn();
+        return PropertiesAndJdbcUtil.getInstance().getJdbcUtil().getConn();
     }
 
     @Override
     public void releaseConn(Connection conn){
-        PropertiesAndJdbcUtil.getInstance().releaseConn(conn);
+        PropertiesAndJdbcUtil.getInstance().getJdbcUtil().releaseConn(conn);
     }
 }
