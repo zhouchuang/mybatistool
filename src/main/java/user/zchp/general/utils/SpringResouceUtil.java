@@ -20,7 +20,7 @@ import java.util.Properties;
  */
 @Component
 @Data
-public class PropertiesAndJdbcUtil {
+public class SpringResouceUtil {
     private String username;
     private String password;
     private String driver;
@@ -34,7 +34,7 @@ public class PropertiesAndJdbcUtil {
 
         try{
             Properties properties=new Properties();
-            InputStream is=PropertiesAndJdbcUtil.class.getClassLoader().getResourceAsStream("jdbc.properties");
+            InputStream is= SpringResouceUtil.class.getClassLoader().getResourceAsStream("jdbc.properties");
             System.out.println("读取代码生成器资源文件");
             properties.load(is);
             is.close();
@@ -100,8 +100,8 @@ public class PropertiesAndJdbcUtil {
         }
 
     }
-    public static PropertiesAndJdbcUtil getInstance(){
-        PropertiesAndJdbcUtil instance = SpringContextUtil.getBean("propertiesAndJdbcUtil");
+    public static SpringResouceUtil getInstance(){
+        SpringResouceUtil instance = SpringContextUtil.getBean("propertiesAndJdbcUtil");
         return instance;
     }
 }
