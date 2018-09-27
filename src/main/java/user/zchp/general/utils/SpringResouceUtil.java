@@ -100,8 +100,12 @@ public class SpringResouceUtil {
         }
 
     }
+
+    private static SpringResouceUtil instance;
     public static SpringResouceUtil getInstance(){
-        SpringResouceUtil instance = SpringContextUtil.getBean("propertiesAndJdbcUtil");
+        if(instance==null){
+            instance = SpringContextUtil.getBean("springResouceUtil");
+        }
         return instance;
     }
 }
