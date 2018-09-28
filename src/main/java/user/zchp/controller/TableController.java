@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import user.zchp.general.Machine;
-import user.zchp.general.pipeline.FileExport;
-import user.zchp.general.process.DemoTableProcess;
 import user.zchp.general.component.LeftTable;
 import user.zchp.general.utils.SpringResouceUtil;
 import user.zchp.models.TableInfo;
@@ -19,6 +16,7 @@ import user.zchp.utils.QueryParam;
 import user.zchp.utils.Result;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +46,18 @@ public class TableController {
     public Result tableList(){
         Result result = new Result();
         List<String> list = businessTableService.tableList(SpringResouceUtil.getInstance().getDatabase());
-        result.setData(list);
+        List<Map<String,Boolean>> newlist = new ArrayList<Map<String,Boolean>>();
+        try {
+            List<TableInfo> tableInfos  = tableInfoService.findList(new QueryParam());
+            for(String name : list){
+                Map<String,Boolean> map = new HashMap<>();
+                map.put(name,tableInfoService.exist(tableInfos,name));
+                newlist.add(map);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        result.setData(newlist);
         return result;
     }
 
@@ -73,9 +82,7 @@ public class TableController {
     @ResponseBody
     public Result generalDao(@RequestBody LeftTable leftTable){
         Result result = new Result();
-        Machine.create(new DemoTableProcess(leftTable))
-        .addPiplineList(new FileExport())
-        .run();
+        tableInfoService.generalHandler(leftTable);
         return result;
     }
 

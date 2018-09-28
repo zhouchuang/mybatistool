@@ -18,6 +18,12 @@
     .hide{
         display: none;
     }
+    .success{
+        background-color:#5cb85c;
+    }
+    label{
+        margin-right: 5px;
+    }
 </style>
 
 
@@ -38,11 +44,11 @@
             <div class="panel-heading">
                 <h3 class="panel-title" id="title">请选择表后再选择关联列</h3>
             </div>
-            <div class="panel-body">
-                <ul class="list-group col-md-6" id="tables">
+            <div class="panel-body"  style="height: 90%">
+                <ul class="list-group col-md-6" id="tables" style="height: 90%">
 
                 </ul>
-                <ul class="list-group col-md-6" id="fields">
+                <ul class="list-group col-md-6" id="fields" style="height: 90%">
 
                 </ul>
             </div>
@@ -52,7 +58,7 @@
 </div>
 <script>
     var tablelist = [];
-    var tabletemplate = "<li class=\"tablename\" ><input type=\"checkbox\" value=\"@{name}\" data-id=\"@{id}\" data-status=\"@{status}\" data-ref=\"@{ref}\"  ><label >@{name}</label></li>";
+    var tabletemplate = "<li class=\"tablename\" ><input type=\"checkbox\" value=\"@{name}\" data-id=\"@{id}\" data-status=\"@{status}\" data-ref=\"@{ref}\"  ><label >@{name}</label><span class=\"badge  @{filestatus}\">@{file}</span></li>";
     var fieldtemplate = "<li><input type=\"checkbox\" value=\"@{name}\" ><label style='color:#909090'>@{name}</label></li>";
     $('#add').click(function(){
         addTable();
@@ -82,14 +88,18 @@
             }
         }).then(function(result){
             var html = "";
-            for(var key in result){
-                html += "<li class=\"list-group-item\">"+result[key]+"</li>";
+            for(var i in result){
+                var obj = result[i];
+                for(var key in obj){
+                    html += "<li data-name=\""+key+"\" data-file=\""+obj[key]+"\" class=\"list-group-item\"><span class=\"badge"+(obj[key]==true?" success":"")+"\" >"+(obj[key]==true?"已生成":"未生成")+"</span>"+key+"</li>";
+                }
             }
             $("#tables").html(html);
         }).then(function () {
             $("#tables").on('click','li',function () {
                 var _this = $(this);
-                var table = $(this).text();
+                var table = $(this).data("name");
+                var file = $(this).data("file");
                 $.getJSON("/TableController/FieldList?table="+table,function (result) {
                     var data = result.data.list;
                     var status = result.data.status;
@@ -103,7 +113,14 @@
                     $("#fields").off("click");
                     $("#fields").on('click','li',function(){
                         refId = $(this).text();
-                        var lihtml  =  tabletemplate.replace("@{name}",table).replace("@{name}",(util.getFirstUp(table)+(status==true?"<span class=\"glyphicon glyphicon-th-list\" aria-hidden=\"true\"></span>":""))).replace("@{id}",id).replace("@{ref}",refId).replace("@{status}",status);
+                        var lihtml  =  tabletemplate.replace("@{name}",table)
+                            //.replace("@{name}",(util.getFirstUp(table)+(status==true?"<span class=\"glyphicon glyphicon-th-list\" aria-hidden=\"true\"></span>":"")))
+                            .replace("@{name}",util.getFirstUp(table))
+                            .replace("@{id}",id)
+                            .replace("@{ref}",refId)
+                            .replace("@{status}",status)
+                            .replace("@{file}",file==true?"已生成":"未生成")
+                            .replace("@{filestatus}",file==true?"success":"");
                         appendDom.append(lihtml+"<ul>"+html+"</ul>");
                         initTree();
                     });

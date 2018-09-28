@@ -1,0 +1,1 @@
+package user.zchp.models;import user.zchp.utils.BaseEntity;import lombok.Data;//表名称 sqlinfo@Datapublic class SqlInfo extends BaseEntity {	private static final long serialVersionUID = 1L;	public SqlInfo() {		super();	}	    //表ID    private String tableId;    //方法ID    private String sqlId;    //    private String json;}

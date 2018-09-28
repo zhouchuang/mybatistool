@@ -9,6 +9,8 @@ import user.zchp.general.component.TemplateInfo;
 import user.zchp.general.pipeline.Pipeline;
 import user.zchp.general.process.TableProcess;
 import user.zchp.general.resource.MysqlDataResource;
+import user.zchp.general.utils.GeneralMessage;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class Machine{
     private List<Pipeline> pipelineList = new ArrayList<Pipeline>();
     private List<TemplateInfo> templateInfos = new ArrayList<TemplateInfo>();
     private TableProcess tableProcess;
+    private GeneralMessage generalMessage;
     public Machine(TableProcess tableProcess){
         this.tableProcess = tableProcess;
     }
@@ -35,15 +38,19 @@ public class Machine{
         return this;
     }
 
-    public void run() {
-        Thread thread = new Thread(new Runnable() {
+    public GeneralMessage run() {
+       /* Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 Table table = tableProcess.getLeftTable().getTable();
                 processTable(table);
             }
         });
-        thread.start();
+        thread.start();*/
+        this.generalMessage = new GeneralMessage();
+        Table table = tableProcess.getLeftTable().getTable();
+        processTable(table);
+        return this.generalMessage;
     }
 
     public void batchProcessTable(Table table){
@@ -75,6 +82,9 @@ public class Machine{
                 pipeline.process(templateInfos);
             }
             batchProcessTable(table);
+            table.setStatus(Boolean.TRUE);
+            //记录到处理信息里面去
+            generalMessage.addTableMessage(table);
         }catch (Exception e){
             e.printStackTrace();
         }

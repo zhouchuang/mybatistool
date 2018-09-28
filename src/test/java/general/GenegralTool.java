@@ -57,7 +57,7 @@ public class GenegralTool {
 		password = (String)properties.get("jdbc.password");
 
 //		batchGeneral();
-		general("tableinfo","TableInfo");
+		general("sqlinfo","SqlInfo");
 	}
 
 
