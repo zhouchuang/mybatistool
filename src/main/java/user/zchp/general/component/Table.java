@@ -20,6 +20,7 @@ public class Table  implements Serializable {
     private List<Field> fields;
     private List<LeftTable> leftTables;
     private Boolean status;
+    private List<TemplateInfo> templateInfos;
 
     public String getName(){
         if(StringUtils.isEmpty(this.name)){

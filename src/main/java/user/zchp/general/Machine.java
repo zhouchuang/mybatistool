@@ -81,6 +81,7 @@ public class Machine{
             for (Pipeline pipeline : pipelineList) {
                 pipeline.process(templateInfos);
             }
+            table.setTemplateInfos(templateInfos);
             batchProcessTable(table);
             table.setStatus(Boolean.TRUE);
             //记录到处理信息里面去
