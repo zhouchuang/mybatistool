@@ -13,22 +13,20 @@
     <div class="panel-heading" id="tableName">Panel heading</div>
 
     <!-- Table -->
-    <table class="table" >
+    <table class="table table-bordered" >
         <tr>
             <th>Name</th>
-            <th>Type</th>
+            <th>JDBC Type</th>
+            <th>JAVA Type</th>
             <th>Comment</th>
-            <th>Null</th>
-            <th>Privileges</th>
         </tr>
         <script  id="fieldlist" type="text/html" data-url="/TableController/FieldList?table={table}">
             {{each list as table}}
             <tr>
-                <td>{{table.Field}}</td>
-                <td>{{table.Type}}</td>
-                <td>{{table.Comment}}</td>
-                <td>{{table.Null}}</td>
-                <td>{{table.Privileges}}</td>
+                <td>{{table.columnName}}</td>
+                <td>{{table.columnType}}</td>
+                <td>{{table.type}}</td>
+                <td>{{table.remarks}}</td>
             </tr>
             {{/each}}
         </script>

@@ -45,7 +45,7 @@ public class Column {
                 return this.defaultValue.toString();
             }
         }else{
-            return this.defaultValue.toString();
+            return null;
         }
     }
 

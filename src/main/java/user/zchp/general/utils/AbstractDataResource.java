@@ -23,4 +23,8 @@ public abstract class AbstractDataResource implements DataResource {
     public void releaseConn(Connection conn){
         SpringResouceUtil.getInstance().getJdbcUtil().releaseConn(conn);
     }
+
+    public void reConnect(Connection connection){
+        SpringResouceUtil.getInstance().getJdbcUtil().reConnect(connection);
+    }
 }

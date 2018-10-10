@@ -7,11 +7,16 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+<style>
+    .success{
+        background-color:#5cb85c;
+    }
+</style>
 <body>
 <ul class="list-group">
-    <script id="tablelist" type="text/html" data-url="/TableController/TableList?database=tool">
+    <script id="tablelist" type="text/html" data-url="/TableController/TableListDetail">
         {{each list as table}}
-        <li class="list-group-item"><a href="javascript:void(0)" onclick="util.loadPage({path:'/table/fieldlist?table={{table}}'})">{{table}}</a></li>
+        <li class="list-group-item" onclick="util.loadPage({path:'/table/fieldlist?table={{table.name}}'})"><span class="badge {{table.status==1?'success':'' }}">{{table.status==0?'未生成':'已生成'}}</span>{{table.name}}</li>
         {{/each}}
     </script>
 </ul>

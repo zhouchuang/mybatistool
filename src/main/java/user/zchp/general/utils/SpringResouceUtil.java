@@ -51,9 +51,9 @@ public class SpringResouceUtil {
 
     class JdbcUtil{
         private LinkedList<Connection> connectPoll;
-        private int initCount = 1;//初始化连接数
+        private int initCount = 2;//初始化连接数
         private int maxCount = 5;//最大连接数
-        private int currentCount = 1;//当前连接数
+        private int currentCount = 2;//当前连接数
 
         public JdbcUtil(){
             try{
@@ -77,6 +77,15 @@ public class SpringResouceUtil {
             return DriverManager.getConnection(url, username, password);
         }
 
+        void reConnect(Connection connection){
+            System.out.println("重新连接");
+            releaseConn(connection);
+            try {
+                connectPoll.addLast(createConnection());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
         Connection getConn()throws Exception{
             synchronized (connectPoll) {//多线程并发处理
                 if(connectPoll.size() > 0){

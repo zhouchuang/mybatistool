@@ -12,7 +12,7 @@ import java.util.*;
  * @author zhouchuang
  * @create 2018-05-12 14:46
  */
-@Service("tableService")
+//@Service("tableService")  暂时不用这个了
 public class BusinessTableService  extends AbstractDataResource {
 
 
@@ -27,7 +27,11 @@ public class BusinessTableService  extends AbstractDataResource {
                 String tableName = result.getString("table_name");
                 list.add(tableName);
             }
-        } catch (Exception e) {
+        }catch (Exception e) {
+
+            if(e.getMessage().equals("No operations allowed after connection closed.")){
+                reConnect(conn);
+            }
             e.printStackTrace();
         } finally {
             releaseConn(conn);

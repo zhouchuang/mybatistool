@@ -8,6 +8,7 @@ import user.zchp.general.utils.SpringResouceUtil;
 import user.zchp.general.utils.StringUtils;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,13 +31,13 @@ public class MysqlDataResource extends AbstractDataResource {
     }
 
 
-    private Map getComments(TableProcess tableProcess){
+    private Map getComments(String tableName){
         Map<String,String> comments = new HashMap<String,String>();
         Connection conn = null;
         try{
             conn = getConn();
             Statement colmunment = conn.createStatement();
-            ResultSet result = colmunment.executeQuery("select COLUMN_NAME,column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableProcess.getCurentTable().getTableName()+"' and table_schema='"+ SpringResouceUtil.getInstance().getDatabase()+"'");
+            ResultSet result = colmunment.executeQuery("select COLUMN_NAME,column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableName+"' and table_schema='"+ SpringResouceUtil.getInstance().getDatabase()+"'");
             while(result.next()){
                 comments.put(result.getString("COLUMN_NAME"), result.getString("column_comment"));
             }
@@ -49,7 +50,7 @@ public class MysqlDataResource extends AbstractDataResource {
     }
 
     public ClassModel getClassModel(TableProcess tableProcess){
-        Map<String,String> comments  = getComments(tableProcess);
+        Map<String,String> comments  = getComments(tableProcess.getCurentTable().getTableName());
         ClassModel cm  = new ClassModel();
         Connection conn = null;
         try{
@@ -76,6 +77,9 @@ public class MysqlDataResource extends AbstractDataResource {
                 cm.addColumn(column);
             }
         }catch (Exception e){
+            if(e.getMessage().equals("No operations allowed after connection closed.")){
+                reConnect(conn);
+            }
             e.printStackTrace();
         }finally {
             releaseConn(conn);
@@ -98,10 +102,72 @@ public class MysqlDataResource extends AbstractDataResource {
                 }
             }
         } catch (Exception e) {
+            if(e.getMessage().equals("No operations allowed after connection closed.")){
+                reConnect(conn);
+            }
             e.printStackTrace();
         }finally {
             releaseConn(conn);
         }
         return this;
     }
+
+    //获取所有的表名称
+    public List<String>  tableList(String database){
+        List<String> list = new ArrayList<String>();
+        Connection  conn = null;
+        try {
+            conn = getConn();
+            Statement colmunment = conn.createStatement();
+            ResultSet result = colmunment.executeQuery("select table_name from information_schema.TABLES where TABLE_SCHEMA= \'"+database+"\' order by table_name ");
+            while(result.next()){
+                String tableName = result.getString("table_name");
+                list.add(tableName);
+            }
+        }catch (Exception e) {
+
+            if(e.getMessage().equals("No operations allowed after connection closed.")){
+                reConnect(conn);
+            }
+            e.printStackTrace();
+        } finally {
+            releaseConn(conn);
+        }
+        return list;
+    }
+
+
+    //获取所有的列信息
+    public List<Column> fieldList(String tableName){
+
+        List<Column> list = new ArrayList<Column>();
+        Map<String,String> comments  = getComments(tableName);
+        Connection conn = null;
+        try {
+            conn = getConn();
+            DatabaseMetaData metaData = conn.getMetaData();
+            ResultSet rs = metaData.getColumns(conn.getCatalog(), SpringResouceUtil.getInstance().getDatabase(), tableName, null);
+            while(rs.next()) {
+                Column column = new Column();
+                column.setColumnSize(Integer.parseInt(rs.getString("DECIMAL_DIGITS")!=null?rs.getString("DECIMAL_DIGITS"):"0"));
+                String str = rs.getString("COLUMN_SIZE");
+                if(StringUtils.isEmpty(str)){
+                    str = "0";
+                }
+                column.setDecimalNum(Integer.parseInt(str));
+                column.setColumnName(rs.getString("COLUMN_NAME"));
+                column.setColumnType(rs.getString("TYPE_NAME"));
+                column.setRemarks(comments.get(rs.getString("COLUMN_NAME")));
+                column.setDefaultValue(rs.getString("COLUMN_DEF"));
+                list.add(column);
+            }
+        }catch (Exception e){
+            if(e.getMessage().equals("No operations allowed after connection closed.")){
+                reConnect(conn);
+            }
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }
