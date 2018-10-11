@@ -2,6 +2,8 @@ package user.zchp.general.component;
 
 import lombok.Data;
 
+import java.io.File;
+
 /**
  * 模板信息
  *
@@ -15,4 +17,9 @@ public class TemplateInfo {
     private String className;
     private String extName;
     private String proPath;
+    private String basePath;
+
+    public String  getRealPath(){
+        return path+ File.separator+className+"."+extName;
+    }
 }

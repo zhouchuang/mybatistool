@@ -50,6 +50,7 @@ public abstract class AbstractAssemble implements Assemble {
         this.templatePath = ModelAssemble.class.getResource("/").getPath()+"template"+ File.separator+getTemplateName();
         templateInfo = new TemplateInfo();
         templateInfo.setExtName(getExtName());
+        templateInfo.setBasePath(tableConfig.getBasePath());
         templateInfo.setPath(tableConfig.getBasePath()+ File.separator+getProPath()+tableConfig.getBasePackage().replace(".",File.separator)+File.separator+getPackageName());
     }
 }

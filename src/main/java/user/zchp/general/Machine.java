@@ -1,5 +1,6 @@
 package user.zchp.general;
 
+import lombok.Data;
 import org.apache.shiro.util.CollectionUtils;
 import user.zchp.general.assemble.*;
 import user.zchp.general.component.ClassModel;
@@ -20,6 +21,7 @@ import java.util.List;
  * @author zhouchuang
  * @create 2018-07-17 23:01
  */
+@Data
 public class Machine{
     private List<Pipeline> pipelineList = new ArrayList<Pipeline>();
     private List<TemplateInfo> templateInfos = new ArrayList<TemplateInfo>();

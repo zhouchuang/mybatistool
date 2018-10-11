@@ -27,6 +27,7 @@ public class SpringResouceUtil {
     private String database;
     private String url;
     private JdbcUtil jdbcUtil;
+    private GeneralMessage message;
 
 
     @PostConstruct
@@ -79,7 +80,9 @@ public class SpringResouceUtil {
 
         void reConnect(Connection connection){
             System.out.println("重新连接");
-            releaseConn(connection);
+            if(connection!=null){
+                connectPoll.remove(connection);
+            }
             try {
                 connectPoll.addLast(createConnection());
             } catch (SQLException e) {

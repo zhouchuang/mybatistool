@@ -716,6 +716,7 @@
         }else if(typeof data == "string"){
             if(data.indexOf("/")==0){
                 url = data;
+                data = success;
             }
         }
         _this.attr("disabled", "disabled");

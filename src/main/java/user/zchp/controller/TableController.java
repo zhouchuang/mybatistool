@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import user.zchp.general.Machine;
 import user.zchp.general.component.Column;
 import user.zchp.general.component.LeftTable;
+import user.zchp.general.component.TemplateInfo;
 import user.zchp.general.resource.MysqlDataResource;
 import user.zchp.general.utils.FileDownloadUtil;
 import user.zchp.general.utils.GeneralMessage;
@@ -116,14 +118,15 @@ public class TableController {
     public Result generalDao(@RequestBody LeftTable leftTable){
         Result result = new Result();
         GeneralMessage generalMessage = tableInfoService.generalHandler(leftTable);
-        result.setData(generalMessage);
+        result.setData(generalMessage.getPaths());
+        SpringResouceUtil.getInstance().setMessage(generalMessage);
         return result;
     }
 
-    @RequestMapping("download")
-    public ResponseEntity<byte[]> download(GeneralMessage generalMessage) throws IOException {
+    @RequestMapping("/download")
+    public ResponseEntity<byte[]> download() throws IOException {
         try {
-            return FileDownloadUtil.download(generalMessage);
+            return FileDownloadUtil.download(SpringResouceUtil.getInstance().getMessage().getPaths());
         } catch (Exception e) {
             e.printStackTrace();
         }

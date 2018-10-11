@@ -105,9 +105,10 @@
                     var status = result.data.status;
                     var fieldhtml = "";
                     var html = "";
-                    for(var key in data){
-                        fieldhtml +=  "<li class=\"list-group-item\">"+data[key].Field+"</li>";
-                        html  += fieldtemplate.replace("@{name}",data[key].Field).replace("@{name}",data[key].Field);
+                    for(var i in data){
+                        var obj = data[i];
+                        fieldhtml +=  "<li class=\"list-group-item\">"+obj.columnName+"</li>";
+                        html  += fieldtemplate.replace("@{name}",obj.columnName).replace("@{name}",obj.columnName);
                     }
                     $("#fields").html(fieldhtml);
                     $("#fields").off("click");
@@ -180,7 +181,7 @@
         }
         var lefttable = generalLeftTable(firsttables);
         $(this).btPost(lefttable[0],function(result){
-
+            window.location.href = "/TableController/download";
         })
 
     });
