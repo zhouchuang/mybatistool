@@ -43,7 +43,7 @@ public class FileDownloadUtil {
             FileUtils.copyFile(new File(templateInfo.getRealPath()), new File(dest));
         }
         compressHandler(file,"javatemp/");
-        return download(file.getPath()+".zip","java生成包");
+        return download(file.getPath()+".zip","生成代码.zip");
     }
 
 
@@ -123,7 +123,6 @@ public class FileDownloadUtil {
         try{
             for(int i=0; i<fs.length; i++){
                 String fName =  fs[i].getName();
-                System.out.println("压缩：" + baseDir+fName);
                 if(fs[i].isFile()){
                     ZipEntry zipEntry = new ZipEntry(baseDir+fName);//
                     zos.putNextEntry(zipEntry);
