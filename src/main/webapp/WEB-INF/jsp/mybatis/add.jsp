@@ -56,6 +56,36 @@
 
     </div>
 </div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade  bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    下载生成代码包
+                </h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                    0%
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="download" class="btn btn-default" >下载
+                </button>
+                <button type="button" class="btn btn-primary">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 <script>
     var tablelist = [];
     var tabletemplate = "<li class=\"tablename\" ><input type=\"checkbox\" value=\"@{name}\" data-id=\"@{id}\" data-status=\"@{status}\" data-ref=\"@{ref}\"  ><label >@{name}</label><span class=\"badge  @{filestatus}\">@{file}</span></li>";
@@ -181,7 +211,30 @@
         }
         var lefttable = generalLeftTable(firsttables);
         $(this).btPost(lefttable[0],function(result){
-            window.location.href = "/TableController/download";
+            if(result.code==200){
+                var temp  = result.data.files;
+                var files = "<ul class=\"list-group\">";
+                for(var i in temp){
+                    var t  = temp[i];
+                    files +=  "<li class=\"list-group-item\"><span class=\"badge btn-primary\">"+t.extName+"</span>"+t.className+"</li>";
+                }
+                files+="</ul>";
+                $(".modal-body").html(files);
+                $("#myModal").modal("show");
+                $("#download").unbind().click(function(){
+                    window.location.href = "/TableController/download/"+result.data.key;
+                    var i = 0;
+                    var inter  =  setInterval(function(){
+                        i+=5;
+                        $(".progress-bar").css("width",i + "%").text(i + "%");
+                        if(i==100){
+                            clearInterval(inter);
+                            $("#myModal").modal("hide");
+                        }
+                    },100);
+                });
+            }
+
         })
 
     });

@@ -9,7 +9,9 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -27,7 +29,8 @@ public class SpringResouceUtil {
     private String database;
     private String url;
     private JdbcUtil jdbcUtil;
-    private GeneralMessage message;
+//    private GeneralMessage message;
+    private Map<String,Object> store = new HashMap<String,Object>();
 
 
     @PostConstruct
@@ -62,7 +65,7 @@ public class SpringResouceUtil {
                 Class.forName(driver);
                 connectPoll = new LinkedList<Connection>();
                 try {
-                    for(int i=0; i<=initCount; i++){//初始化生成5个数据库连接
+                    for(int i=0; i<initCount; i++){//初始化生成5个数据库连接
                         connectPoll.addLast(createConnection());
                     }
                 } catch (SQLException e) {
@@ -82,6 +85,7 @@ public class SpringResouceUtil {
             System.out.println("重新连接");
             if(connection!=null){
                 connectPoll.remove(connection);
+                currentCount--;
             }
             try {
                 connectPoll.addLast(createConnection());

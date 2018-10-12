@@ -8,10 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import user.zchp.general.Machine;
 import user.zchp.general.component.Column;
 import user.zchp.general.component.LeftTable;
@@ -118,15 +115,18 @@ public class TableController {
     public Result generalDao(@RequestBody LeftTable leftTable){
         Result result = new Result();
         GeneralMessage generalMessage = tableInfoService.generalHandler(leftTable);
-        result.setData(generalMessage.getPaths());
-        SpringResouceUtil.getInstance().setMessage(generalMessage);
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("key","GeneralMessage");
+        map.put("files",generalMessage.getPaths());
+        result.setData(map);
+        SpringResouceUtil.getInstance().getStore().put("GeneralMessage",generalMessage);
         return result;
     }
 
-    @RequestMapping("/download")
-    public ResponseEntity<byte[]> download() throws IOException {
+    @RequestMapping("/download/{key}")
+    public ResponseEntity<byte[]> download(@PathVariable String key) throws IOException {
         try {
-            return FileDownloadUtil.download(SpringResouceUtil.getInstance().getMessage().getPaths());
+            return FileDownloadUtil.download(((GeneralMessage)SpringResouceUtil.getInstance().getStore().get(key)).getPaths());
         } catch (Exception e) {
             e.printStackTrace();
         }

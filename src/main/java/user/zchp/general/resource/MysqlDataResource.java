@@ -166,6 +166,8 @@ public class MysqlDataResource extends AbstractDataResource {
                 reConnect(conn);
             }
             e.printStackTrace();
+        }finally {
+            releaseConn(conn);
         }
         return list;
     }

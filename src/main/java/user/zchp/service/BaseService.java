@@ -17,10 +17,7 @@ public interface BaseService {
     PageParam findPage(PageParam pageParam) throws Exception;
     <ENTITY extends BaseEntity> ENTITY get(String id) throws Exception;
     Long count(QueryParam queryParam)throws Exception;
-    PageParam findLikePage(PageParam pageParam)throws Exception;
     <ENTITY extends BaseEntity> ENTITY one(QueryParam queryParam) throws Exception;
     <ENTITY extends BaseEntity> List<ENTITY> findList(QueryParam queryParam)throws Exception;
-    <ENTITY extends BaseEntity> List<ENTITY> findLikeList(QueryParam queryParam)throws Exception;
     List<String> findIds(QueryParam queryParam, String idsName)throws Exception;
-    List<String> findLikeIds(QueryParam queryParam, String idsName)throws Exception;
 }

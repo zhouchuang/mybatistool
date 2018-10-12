@@ -252,16 +252,6 @@ public abstract class AbstractService implements BaseService{
         return  this.getDao().count(queryParam);
     }
     /**
-     * 获取模糊查询分页
-     * @param pageParam
-     * @return List<ENTITY>
-     * @exception Exception
-     */
-    public PageParam findLikePage(PageParam pageParam)throws Exception{
-        pageParam.setList(this.getDao().findLikePage(pageParam));
-        return  pageParam;
-    }
-    /**
      * 获取list集合，不分页
      * @param queryParam
      * @return List<ENTITY>
@@ -269,15 +259,6 @@ public abstract class AbstractService implements BaseService{
      */
     public <ENTITY extends BaseEntity> List<ENTITY> findList(QueryParam queryParam)throws Exception{
         return this.getDao().findList(queryParam);
-    }
-    /**
-     * 获取list集合，模糊查询，不分页
-     * @param queryParam
-     * @return List<ENTITY>
-     * @exception Exception
-     */
-    public <ENTITY extends BaseEntity> List<ENTITY> findLikeList(QueryParam queryParam)throws Exception{
-        return this.getDao().findLikeList(queryParam);
     }
     /**
      * 获取id集合
@@ -288,16 +269,6 @@ public abstract class AbstractService implements BaseService{
     public  List<String> findIds(QueryParam queryParam,String idsName)throws Exception{
         queryParam.setIdsColumn(idsName);
         return  this.getDao().findIds(queryParam);
-    }
-    /**
-     * 获取id集合,模糊搜索
-     * @param queryParam
-     * @return List<String>
-     * @exception Exception
-     */
-    public  List<String> findLikeIds(QueryParam queryParam,String idsName)throws Exception{
-        queryParam.setIdsColumn(idsName);
-        return  this.getDao().findLikeIds(queryParam);
     }
 
     public <ENTITY extends BaseEntity>  List<String> findIds(List<ENTITY> entities)throws Exception{

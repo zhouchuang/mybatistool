@@ -54,16 +54,6 @@ public interface Dao {
      */
     Long count(QueryParam queryParam);
     /**
-     * 查询符合条件的一个页面
-     * @return  对象页面
-     */
-    <ENTITY extends BaseEntity> List<ENTITY> findLikePage(PageParam pageParam);
-    /**
-     * 查询符合条件的一个集合
-     * @return  对象集合
-     */
-    <ENTITY extends BaseEntity> List<ENTITY> findLikeList(QueryParam queryParam);
-    /**
      * 查询符合条件的一个对象
      * @return  返回id集合
      */
@@ -73,9 +63,4 @@ public interface Dao {
      * @return  返回id集合
      */
     List<String> findIds(QueryParam queryParam);
-    /**
-     * 查找符合条件的id集合，模糊查询
-     * @return  返回id集合
-     */
-    List<String> findLikeIds(QueryParam queryParam);
 }
