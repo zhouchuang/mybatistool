@@ -3,9 +3,7 @@ package user.zchp.general.pipeline;
 import user.zchp.general.component.TemplateInfo;
 import user.zchp.service.DictCacheService;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -27,9 +25,14 @@ public class FileExport implements Pipeline{
                 if(fout.exists()){
                     fout.delete();
                 }
-                BufferedWriter writer = new BufferedWriter(new FileWriter(fout, true));
+//                BufferedWriter writer = new BufferedWriter(new FileWriter(fout, true));
+                FileOutputStream writerStream = new FileOutputStream(fout);
+                OutputStreamWriter osw = new OutputStreamWriter(writerStream,"UTF-8");
+                BufferedWriter writer = new BufferedWriter(osw);
                 writer.write(templateInfo.getTemplate());
                 writer.close();
+                osw.close();
+                writerStream.close();
             }catch (Exception e){
                 e.printStackTrace();
             }

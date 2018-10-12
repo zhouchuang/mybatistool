@@ -60,21 +60,24 @@ public class MysqlDataResource extends AbstractDataResource {
             cm.setName(StringUtils.getFirstCharToLower(tableProcess.getCurentTable().getName()));
             cm.setPackageName(tableProcess.getConfig().getBasePackage());
             cm.setTableName(tableProcess.getCurentTable().getTableName());
+            cm.setPkId(tableProcess.getConfig().getPk().getName());
 //            cm.setPath(tableProcess.getConfig().getBasePath());
             while(rs.next()) {
-                Column column = new Column();
-                column.setColumnSize(Integer.parseInt(rs.getString("DECIMAL_DIGITS")!=null?rs.getString("DECIMAL_DIGITS"):"0"));
-                String str = rs.getString("COLUMN_SIZE");
-                if(StringUtils.isEmpty(str)){
-                    str = "0";
+                if(!cm.getPkId().equalsIgnoreCase(rs.getString("COLUMN_NAME"))){
+                    Column column = new Column();
+                    column.setColumnSize(Integer.parseInt(rs.getString("DECIMAL_DIGITS")!=null?rs.getString("DECIMAL_DIGITS"):"0"));
+                    String str = rs.getString("COLUMN_SIZE");
+                    if(StringUtils.isEmpty(str)){
+                        str = "0";
+                    }
+                    column.setDecimalNum(Integer.parseInt(str));
+                    column.setColumnName(rs.getString("COLUMN_NAME"));
+                    column.setColumnType(rs.getString("TYPE_NAME"));
+                    column.setRemarks(comments.get(rs.getString("COLUMN_NAME")));
+                    column.setDefaultValue(rs.getString("COLUMN_DEF"));
+                    column.setIsBase((tableProcess.getConfig().isBaseColumn(column.getName()))?Boolean.TRUE:Boolean.FALSE);
+                    cm.addColumn(column);
                 }
-                column.setDecimalNum(Integer.parseInt(str));
-                column.setColumnName(rs.getString("COLUMN_NAME"));
-                column.setColumnType(rs.getString("TYPE_NAME"));
-                column.setRemarks(comments.get(rs.getString("COLUMN_NAME")));
-                column.setDefaultValue(rs.getString("COLUMN_DEF"));
-                column.setIsBase((tableProcess.getConfig().isBaseColumn(column.getName()))?Boolean.TRUE:Boolean.FALSE);
-                cm.addColumn(column);
             }
         }catch (Exception e){
             if(e.getMessage().equals("No operations allowed after connection closed.")){
