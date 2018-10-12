@@ -80,7 +80,7 @@ public class MysqlDataResource extends AbstractDataResource {
                 }
             }
         }catch (Exception e){
-            if(e.getMessage().equals("No operations allowed after connection closed.")){
+            if("No operations allowed after connection closed.".equals(e.getMessage())){
                 reConnect(conn);
             }
             e.printStackTrace();
@@ -129,7 +129,7 @@ public class MysqlDataResource extends AbstractDataResource {
             }
         }catch (Exception e) {
 
-            if(e.getMessage().equals("No operations allowed after connection closed.")){
+            if(e.getMessage().equals("No operations allowed after connection closed.") || e.getMessage().equals("Communications link failure")){
                 reConnect(conn);
             }
             e.printStackTrace();

@@ -1,27 +1,7 @@
 ﻿var util = {
 
-    mask: "<div class=\"loading\">\n" +
-    "        <div class=\"spinner\">\n" +
-    "            <div class=\"spinner-container container1\">\n" +
-    "                <div class=\"circle1\"></div>\n" +
-    "                <div class=\"circle2\"></div>\n" +
-    "                <div class=\"circle3\"></div>\n" +
-    "                <div class=\"circle4\"></div>\n" +
-    "            </div>\n" +
-    "            <div class=\"spinner-container container2\">\n" +
-    "                <div class=\"circle1\"></div>\n" +
-    "                <div class=\"circle2\"></div>\n" +
-    "                <div class=\"circle3\"></div>\n" +
-    "                <div class=\"circle4\"></div>\n" +
-    "            </div>\n" +
-    "            <div class=\"spinner-container container3\">\n" +
-    "                <div class=\"circle1\"></div>\n" +
-    "                <div class=\"circle2\"></div>\n" +
-    "                <div class=\"circle3\"></div>\n" +
-    "                <div class=\"circle4\"></div>\n" +
-    "            </div>\n" +
-    "        </div>\n" +
-    "    </div>",
+    mask: "<div class=\"modal fade  bs-example-modal-sm in\" id=\"myModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\" style=\"display: block;\">\n" +
+    "</div>",
     isNull: function (str) {
         if (typeof(str) == "string"){
             var reg = /^\s*$/g;
@@ -717,6 +697,10 @@
             if(data.indexOf("/")==0){
                 url = data;
                 data = success;
+                if (typeof data == "object") {
+                    data = JSON.stringify(data);
+                }
+                success = error;
             }
         }
         _this.attr("disabled", "disabled");
