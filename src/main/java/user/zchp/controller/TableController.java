@@ -75,9 +75,8 @@ public class TableController {
 
     @RequestMapping(value = "/TableListDetail")
     @ResponseBody
-    public Result TableListDetail(){
+    public Result TableListDetail(@RequestBody PageParam pageParam){
         Result result = new Result();
-        PageParam pageParam  = new PageParam();
         pageParam.put("database",SpringResouceUtil.getInstance().getDatabase());
         List<String> list = MysqlDataResource.getInstance().tableList(pageParam);
         List<Map<String,Object>> newlist = new ArrayList<Map<String,Object>>();

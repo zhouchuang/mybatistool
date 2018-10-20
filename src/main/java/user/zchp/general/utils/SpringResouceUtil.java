@@ -81,7 +81,7 @@ public class SpringResouceUtil {
             return DriverManager.getConnection(url, username, password);
         }
 
-        void reConnect(Connection connection){
+        Connection reConnect(Connection connection){
             System.out.println("重新连接");
             if(connection!=null){
                 connectPoll.remove(connection);
@@ -92,6 +92,7 @@ public class SpringResouceUtil {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            return connectPoll.getFirst();
         }
         Connection getConn()throws Exception{
             synchronized (connectPoll) {//多线程并发处理

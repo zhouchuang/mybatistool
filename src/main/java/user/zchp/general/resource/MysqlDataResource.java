@@ -6,6 +6,7 @@ import user.zchp.general.process.TableProcess;
 import user.zchp.general.utils.AbstractDataResource;
 import user.zchp.general.utils.SpringResouceUtil;
 import user.zchp.general.utils.StringUtils;
+import user.zchp.utils.PageParam;
 import user.zchp.utils.QueryParam;
 
 import java.sql.*;
@@ -37,8 +38,10 @@ public class MysqlDataResource extends AbstractDataResource {
         Connection conn = null;
         try{
             conn = getConn();
-            Statement colmunment = conn.createStatement();
+           /* Statement colmunment = conn.createStatement();
             ResultSet result = colmunment.executeQuery("select COLUMN_NAME,column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableName+"' and table_schema='"+ SpringResouceUtil.getInstance().getDatabase()+"'");
+            */
+            ResultSet result = getResultSetByQuery(conn,"select COLUMN_NAME,column_comment from INFORMATION_SCHEMA.Columns where table_name='"+tableName+"' and table_schema='"+ SpringResouceUtil.getInstance().getDatabase()+"'");
             while(result.next()){
                 comments.put(result.getString("COLUMN_NAME"), result.getString("column_comment"));
             }
@@ -56,8 +59,10 @@ public class MysqlDataResource extends AbstractDataResource {
         Connection conn = null;
         try{
             conn = getConn();
-            DatabaseMetaData metaData = conn.getMetaData();
+            /*DatabaseMetaData metaData = conn.getMetaData();
             ResultSet rs = metaData.getColumns(conn.getCatalog(), SpringResouceUtil.getInstance().getDatabase(), tableProcess.getCurentTable().getTableName(), null);
+            */
+            ResultSet rs = getResultSetByMetaData(conn,SpringResouceUtil.getInstance().getDatabase(), tableProcess.getCurentTable().getTableName(), null);
             cm.setName(StringUtils.getFirstCharToLower(tableProcess.getCurentTable().getName()));
             cm.setPackageName(tableProcess.getConfig().getBasePackage());
             cm.setTableName(tableProcess.getCurentTable().getTableName());
@@ -81,9 +86,6 @@ public class MysqlDataResource extends AbstractDataResource {
                 }
             }
         }catch (Exception e){
-            if("No operations allowed after connection closed.".equals(e.getMessage())){
-                reConnect(conn);
-            }
             e.printStackTrace();
         }finally {
             releaseConn(conn);
@@ -99,16 +101,10 @@ public class MysqlDataResource extends AbstractDataResource {
             Statement  statement = conn.createStatement();
             List<Column> columnList = tableProcess.getConfig().getDefaultColumnList();
             for(Column column : columnList){
-                try{
-                    statement.executeUpdate("alter table "+tableProcess.getCurentTable().getTableName()+" add ("+column.getName()+" "+column.getDataType().dbtype+"("+column.getDataType().len+")) ");
-                }catch(SQLException e){
-//                    System.out.println(tableProcess.getCurentTable().getTableName()+"已经存在'"+column.getName()+"'列\n"+e.getMessage());
-                }
+                getResultSetByUpdate(conn,"alter table "+tableProcess.getCurentTable().getTableName()+" add ("+column.getName()+" "+column.getDataType().dbtype+"("+column.getDataType().len+")) ");
+                //statement.executeUpdate("alter table "+tableProcess.getCurentTable().getTableName()+" add ("+column.getName()+" "+column.getDataType().dbtype+"("+column.getDataType().len+")) ");
             }
         } catch (Exception e) {
-            if(e.getMessage().equals("No operations allowed after connection closed.")){
-                reConnect(conn);
-            }
             e.printStackTrace();
         }finally {
             releaseConn(conn);
@@ -117,22 +113,20 @@ public class MysqlDataResource extends AbstractDataResource {
     }
 
     //获取所有的表名称
-    public List<String>  tableList(QueryParam queryParam){
+    public List<String>  tableList(PageParam queryParam){
         List<String> list = new ArrayList<String>();
         Connection  conn = null;
         try {
             conn = getConn();
-            Statement colmunment = conn.createStatement();
+            /*Statement colmunment = conn.createStatement();
             ResultSet result = colmunment.executeQuery("select table_name from information_schema.TABLES where TABLE_SCHEMA= \'"+queryParam.getCondition().get("database")+"\' order by table_name ");
+            */
+            ResultSet result = getResultSetByQuery(conn,"select table_name from information_schema.TABLES where TABLE_SCHEMA= \'"+queryParam.getCondition().get("database")+"\' order by table_name limit "+(queryParam.getCurrentPage()-1)*queryParam.getPageSize()+","+queryParam.getCurrentPage()*queryParam.getPageSize());
             while(result.next()){
                 String tableName = result.getString("table_name");
                 list.add(tableName);
             }
         }catch (Exception e) {
-
-            if(e.getMessage().equals("No operations allowed after connection closed.") || e.getMessage().equals("Communications link failure")){
-                reConnect(conn);
-            }
             e.printStackTrace();
         } finally {
             releaseConn(conn);
@@ -149,9 +143,11 @@ public class MysqlDataResource extends AbstractDataResource {
         Connection conn = null;
         try {
             conn = getConn();
-            DatabaseMetaData metaData = conn.getMetaData();
+           /* DatabaseMetaData metaData = conn.getMetaData();
             ResultSet rs = metaData.getColumns(conn.getCatalog(), SpringResouceUtil.getInstance().getDatabase(), tableName, null);
-            while(rs.next()) {
+            */
+            ResultSet rs = getResultSetByMetaData(conn,SpringResouceUtil.getInstance().getDatabase(), tableName, null);
+           while(rs.next()) {
                 Column column = new Column();
                 column.setColumnSize(Integer.parseInt(rs.getString("DECIMAL_DIGITS")!=null?rs.getString("DECIMAL_DIGITS"):"0"));
                 String str = rs.getString("COLUMN_SIZE");
@@ -166,9 +162,6 @@ public class MysqlDataResource extends AbstractDataResource {
                 list.add(column);
             }
         }catch (Exception e){
-            if(e.getMessage().equals("No operations allowed after connection closed.")){
-                reConnect(conn);
-            }
             e.printStackTrace();
         }finally {
             releaseConn(conn);

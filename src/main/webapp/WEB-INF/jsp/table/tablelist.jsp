@@ -48,7 +48,7 @@
 
 
 
-<div class="panel-group" id="accordion">
+<%--<div class="panel-group" id="accordion">
     <script id="tablelist" type="text/html" data-url="/TableController/TableListDetail">
         {{each list as table index}}
             <div class="panel panel-default">
@@ -68,7 +68,45 @@
             </div>
         {{/each}}
     </script>
+</div>--%>
+
+<div class="container">
+    <ul class="list-group">
+        <script id="tablelist" type="text/html" data-url="/TableController/TableListDetail">
+            {{each list as table index}}
+                <li class="list-group-item">
+                    <span class="badge general {{table.status==1?'success':'noexist' }}">{{table.status==0?'未生成':'已生成'}}</span>
+                    <a>{{table.name}}</a>
+                </li>
+            {{/each}}
+        </script>
+    </ul>
+
+
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li>
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li>
+                <a href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
+
+
+
 <script id="field" type="text/html">
     {{each list as table}}
     <tr>
@@ -81,7 +119,7 @@
 </script>
 <script>
     $("#tablelist").loadData().then(function(){
-        $("#accordion").on('click','a',function(){
+        /*$("#accordion").on('click','a',function(){
             var _this = $(this);
             $.getJSON("/TableController/FieldList?table="+_this.data("table"),function(result){
                 result.data.list.splice()
@@ -97,9 +135,9 @@
                     "                             </table>";
                 $("#collapseOne"+_this.data("index")).find("div:first").html(html);
             });
-        });
+        });*/
 
-        $("#accordion").on("click",".general",function(e){
+      /*  $("#accordion").on("click",".general",function(e){
             var _this = $(this);
             e.stopPropagation();
             e.preventDefault();
@@ -136,7 +174,7 @@
                     });
                 }
             });
-        });
+        });*/
     });
 </script>
 </body>
