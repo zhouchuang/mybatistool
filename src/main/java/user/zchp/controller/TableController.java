@@ -20,6 +20,7 @@ import user.zchp.general.utils.SpringResouceUtil;
 import user.zchp.models.TableInfo;
 import user.zchp.service.TableInfoService;
 import user.zchp.service.BusinessTableService;
+import user.zchp.utils.PageParam;
 import user.zchp.utils.QueryParam;
 import user.zchp.utils.Result;
 
@@ -54,7 +55,9 @@ public class TableController {
     @ResponseBody
     public Result tableList(){
         Result result = new Result();
-        List<String> list = MysqlDataResource.getInstance().tableList(SpringResouceUtil.getInstance().getDatabase());
+        PageParam pageParam  = new PageParam();
+        pageParam.put("database",SpringResouceUtil.getInstance().getDatabase());
+        List<String> list = MysqlDataResource.getInstance().tableList(pageParam);
         List<Map<String,Boolean>> newlist = new ArrayList<Map<String,Boolean>>();
         try {
             List<TableInfo> tableInfos  = tableInfoService.findList(new QueryParam());
@@ -74,7 +77,9 @@ public class TableController {
     @ResponseBody
     public Result TableListDetail(){
         Result result = new Result();
-        List<String> list = MysqlDataResource.getInstance().tableList(SpringResouceUtil.getInstance().getDatabase());
+        PageParam pageParam  = new PageParam();
+        pageParam.put("database",SpringResouceUtil.getInstance().getDatabase());
+        List<String> list = MysqlDataResource.getInstance().tableList(pageParam);
         List<Map<String,Object>> newlist = new ArrayList<Map<String,Object>>();
         try {
             List<TableInfo> tableInfos  = tableInfoService.findList(new QueryParam());
@@ -128,6 +133,7 @@ public class TableController {
         try {
             return FileDownloadUtil.download(((GeneralMessage)SpringResouceUtil.getInstance().getStore().get(key)).getPaths());
         } catch (Exception e) {
+
             e.printStackTrace();
         }
         return null;
