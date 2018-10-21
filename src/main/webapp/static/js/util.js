@@ -1,7 +1,6 @@
 ﻿var util = {
 
-    mask: "<div class=\"modal fade  bs-example-modal-sm in\" id=\"myModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\" style=\"display: block;\">\n" +
-    "</div>",
+    mask: "<div id='myLoading' class=\"modal-backdrop fade in\" style='text-align: center;'><img style=\"position: absolute;top: 50%;left: 50%;\" src=\"/static/images/loading.gif\"></div>",
     isNull: function (str) {
         if (typeof(str) == "string"){
             var reg = /^\s*$/g;
@@ -540,7 +539,7 @@
 
     $.fn.appendData = function (config,utilRefresh,beforeCallback) {
         var temp = $(this);
-        // temp.before(util.mask);
+        temp.before(util.mask);
         var result;
         var url = temp.data("url");
         var res = temp.data("res");
@@ -609,6 +608,7 @@
             else{
                 utilRefresh.endPullupToRefresh(true);
             }
+            temp.prev("#myLoading").remove();
             return result||{nextPage:0};
         });
     };
@@ -682,7 +682,7 @@
             } else {
                 $.ajax(param);
             }
-            temp.prev(".loading").remove();
+            temp.prev("#myLoading").remove();
             return result;
         });
     };
@@ -726,7 +726,7 @@
             },
             complete: function () {
                 _this.removeAttr("disabled");
-                $("body").prev(".loading").remove();
+                $("body").prev("#myLoading").remove();
 
             }
         })

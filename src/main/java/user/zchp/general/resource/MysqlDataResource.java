@@ -121,7 +121,11 @@ public class MysqlDataResource extends AbstractDataResource {
             /*Statement colmunment = conn.createStatement();
             ResultSet result = colmunment.executeQuery("select table_name from information_schema.TABLES where TABLE_SCHEMA= \'"+queryParam.getCondition().get("database")+"\' order by table_name ");
             */
-            ResultSet result = getResultSetByQuery(conn,"select table_name from information_schema.TABLES where TABLE_SCHEMA= \'"+queryParam.getCondition().get("database")+"\' order by table_name limit "+(queryParam.getCurrentPage()-1)*queryParam.getPageSize()+","+queryParam.getCurrentPage()*queryParam.getPageSize());
+            String wheresql = " and 1=1 ";
+            if(StringUtils.isNotEmptyString(queryParam.getCondition().get("key"))){
+                wheresql += " and table_name like '" +queryParam.getCondition().get("key").toString()+"%'";
+            }
+            ResultSet result = getResultSetByQuery(conn,"select table_name from information_schema.TABLES where TABLE_SCHEMA= \'"+queryParam.getCondition().get("database")+"\'"+wheresql+" order by table_name limit "+(queryParam.getCurrentPage()-1)*queryParam.getPageSize()+","+queryParam.getCurrentPage()*queryParam.getPageSize());
             while(result.next()){
                 String tableName = result.getString("table_name");
                 list.add(tableName);

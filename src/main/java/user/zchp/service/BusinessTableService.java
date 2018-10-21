@@ -28,10 +28,6 @@ public class BusinessTableService  extends AbstractDataResource {
                 list.add(tableName);
             }
         }catch (Exception e) {
-
-            if(e.getMessage().equals("No operations allowed after connection closed.")){
-                reConnect(conn);
-            }
             e.printStackTrace();
         } finally {
             releaseConn(conn);

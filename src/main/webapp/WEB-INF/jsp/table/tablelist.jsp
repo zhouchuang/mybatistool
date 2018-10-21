@@ -46,57 +46,40 @@
     </div><!-- /.modal -->
 </div>
 
-
-<div class="modal fade  bs-example-modal-sm" id="field" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade " id="myField" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myTableName">
+
+                </h4>
+            </div>
+            <div class="modal-body" id="myFieldContent">
+
+            </div>
         </div>
     </div>
 </div>
 
-<%--<div class="panel-group" id="accordion">
-    <script id="tablelist" type="text/html" data-url="/TableController/TableListDetail">
-        {{each list as table index}}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion"
-                           href="#collapseOne{{index}}" data-index="{{index}}" data-table="{{table.name}}">
-                            <li class="list-group-item" ><span class="badge  general {{table.status==1?'success':'noexist' }}">{{table.status==0?'未生成':'已生成'}}</span>{{table.name}}</li>
-                        </a>
-                    </h4>
-                </div>
-                <div id="collapseOne{{index}}" class="panel-collapse collapse">
-                    <div class="panel-body">
-
-                    </div>
-                </div>
-            </div>
-        {{/each}}
-    </script>
-</div>--%>
 
 <div class="container">
-
-    <nav aria-label="Page navigation">
-        <ul class="pagination" id="charPanel">
-        </ul>
-    </nav>
-
-
-    <ul class="list-group">
+    <div class="btn-toolbar" role="toolbar" >
+        <div class="btn-group" role="group" id="charPanel" >
+        </div>
+    </div>
+    <ul class="list-group" id="tablePanel">
         <script id="tablelist" type="text/html" data-url="/TableController/TableListDetail">
             {{each list as table index}}
                 <li class="list-group-item">
-                    <span class="badge general {{table.status==1?'success':'noexist' }}">{{table.status==0?'未生成':'已生成'}}</span>
+                    <span data-table="{{table.name}}" class="badge general {{table.status==1?'success':'noexist' }}">{{table.status==0?'未生成':'已生成'}}</span>
                     <a>{{table.name}}</a>
                 </li>
             {{/each}}
         </script>
     </ul>
-
-
-
     <nav aria-label="Page navigation">
         <ul class="pagination">
             <li>
@@ -134,29 +117,94 @@
 
     function  init(){
         for(var i=0;i<26;i++){
-            $("#charPanel").append("<li><a href=\"#\">"+String.fromCharCode(0x60+i+1)+"</a></li>");
+            $("#charPanel").append("<button type=\"button\" class=\"btn btn-default\">"+String.fromCharCode(0x60+i+1)+"</button>");
         }
+        $("#charPanel").on('click','button',function(){
+            load($(this).text());
+        });
+        load('a');
+    }
+    init();
+
+    function load(key){
+        $("#tablelist").loadData({pageSize:15,currentPage:1,condition:{key:key}}).then(function(result){
+
+        });
     }
 
-    init();
-    $("#tablelist").loadData({pageSize:15,currentPage:1}).then(function(){
-        /*$("#accordion").on('click','a',function(){
-            var _this = $(this);
-            $.getJSON("/TableController/FieldList?table="+_this.data("table"),function(result){
-                result.data.list.splice()
-                var html = template("field", result.data);
-                html="<table class=\"table table-bordered\" >\n" +
-                    "                                <tr>\n" +
-                    "                                    <th>Name</th>\n" +
-                    "                                    <th>JDBC Type</th>\n" +
-                    "                                    <th>JAVA Type</th>\n" +
-                    "                                    <th>Comment</th>\n" +
-                    "                                </tr>\n" +
-                    html +
-                    "                             </table>";
-                $("#collapseOne"+_this.data("index")).find("div:first").html(html);
-            });
-        });*/
+
+    $("#tablePanel").on('click','a',function(){
+        var _this = $(this);
+        $.getJSON("/TableController/FieldList?table="+_this.text(),function(result){
+            result.data.list.splice()
+            var html = template("field", result.data);
+            html="<table class=\"table table-bordered\" >\n" +
+                "                                <tr>\n" +
+                "                                    <th>Name</th>\n" +
+                "                                    <th>JDBC Type</th>\n" +
+                "                                    <th>JAVA Type</th>\n" +
+                "                                    <th>Comment</th>\n" +
+                "                                </tr>\n" +
+                html +
+                "                             </table>";
+            $("#myFieldContent").html(html);
+            $("#myTableName").text(_this.text());
+            $("#myField").modal("show");
+        });
+    });
+
+    $("#tablePanel").on('click','span',function(){
+        var _this = $(this);
+        var lefttable = {
+            table:{
+                tableName:_this.data("table")
+            }
+        }
+        $(this).btPost("/TableController/generalDao",lefttable,function (result) {
+            if(result.code==200){
+                _this.addClass("success");
+                var temp  = result.data.files;
+                var files = "<ul class=\"list-group\">";
+                for(var i in temp){
+                    var t  = temp[i];
+                    files +=  "<li class=\"list-group-item\"><span class=\"badge btn-primary\">"+t.extName+"</span>"+t.className+"</li>";
+                }
+                files+="</ul>";
+                $(".modal-body").html(files);
+                $("#myModal").modal("show");
+                $("#download").unbind().click(function(){
+                    window.location.href = "/TableController/download/"+result.data.key;
+                    var i = 0;
+                    var inter  =  setInterval(function(){
+                        i+=5;
+                        $(".progress-bar").css("width",i + "%").text(i + "%");
+                        if(i==100){
+                            clearInterval(inter);
+                            $("#myModal").modal("hide");
+                        }
+                    },100);
+                });
+            }
+        });
+    });
+    /* $("#tablelist").loadData({pageSize:15,currentPage:1}).then(function(){
+         $("#accordion").on('click','a',function(){
+             var _this = $(this);
+             $.getJSON("/TableController/FieldList?table="+_this.data("table"),function(result){
+                 result.data.list.splice()
+                 var html = template("field", result.data);
+                 html="<table class=\"table table-bordered\" >\n" +
+                     "                                <tr>\n" +
+                     "                                    <th>Name</th>\n" +
+                     "                                    <th>JDBC Type</th>\n" +
+                     "                                    <th>JAVA Type</th>\n" +
+                     "                                    <th>Comment</th>\n" +
+                     "                                </tr>\n" +
+                     html +
+                     "                             </table>";
+                 $("#collapseOne"+_this.data("index")).find("div:first").html(html);
+             });
+         });*/
 
       /*  $("#accordion").on("click",".general",function(e){
             var _this = $(this);
@@ -195,8 +243,8 @@
                     });
                 }
             });
-        });*/
-    });
+        });
+    });*/
 </script>
 </body>
 </html>
