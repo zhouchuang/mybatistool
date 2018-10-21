@@ -47,6 +47,12 @@
 </div>
 
 
+<div class="modal fade  bs-example-modal-sm" id="field" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
 
 <%--<div class="panel-group" id="accordion">
     <script id="tablelist" type="text/html" data-url="/TableController/TableListDetail">
@@ -71,6 +77,13 @@
 </div>--%>
 
 <div class="container">
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination" id="charPanel">
+        </ul>
+    </nav>
+
+
     <ul class="list-group">
         <script id="tablelist" type="text/html" data-url="/TableController/TableListDetail">
             {{each list as table index}}
@@ -118,7 +131,15 @@
     {{/each}}
 </script>
 <script>
-    $("#tablelist").loadData().then(function(){
+
+    function  init(){
+        for(var i=0;i<26;i++){
+            $("#charPanel").append("<li><a href=\"#\">"+String.fromCharCode(0x60+i+1)+"</a></li>");
+        }
+    }
+
+    init();
+    $("#tablelist").loadData({pageSize:15,currentPage:1}).then(function(){
         /*$("#accordion").on('click','a',function(){
             var _this = $(this);
             $.getJSON("/TableController/FieldList?table="+_this.data("table"),function(result){
