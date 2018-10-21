@@ -613,6 +613,31 @@
         });
     };
 
+    $.fn.loadDataByPage = function(config, beforeCallback){
+        $(this).loadData(config,beforeCallback);
+        $(this).parent().next(".mynav").remove();
+        var nav = "<nav aria-label=\"Page navigation\" class='mynav'>\n" +
+            "        <ul class=\"pagination\">\n" +
+            "            <li>\n" +
+            "                <a href=\"#\" aria-label=\"Previous\">\n" +
+            "                    <span aria-hidden=\"true\">&laquo;</span>\n" +
+            "                </a>\n" +
+            "            </li>\n" +
+            "            <li><a href=\"#\">1</a></li>\n" +
+            "            <li><a href=\"#\">2</a></li>\n" +
+            "            <li><a href=\"#\">3</a></li>\n" +
+            "            <li><a href=\"#\">4</a></li>\n" +
+            "            <li><a href=\"#\">5</a></li>\n" +
+            "            <li>\n" +
+            "                <a href=\"#\" aria-label=\"Next\">\n" +
+            "                    <span aria-hidden=\"true\">&raquo;</span>\n" +
+            "                </a>\n" +
+            "            </li>\n" +
+            "        </ul>\n" +
+            "    </nav>";
+
+        $(this).parent().after(nav);
+    };
 
     $.fn.loadData = function (config, beforeCallback) {
         var temp = $(this);

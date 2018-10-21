@@ -80,7 +80,7 @@
             {{/each}}
         </script>
     </ul>
-    <nav aria-label="Page navigation">
+    <%--<nav aria-label="Page navigation">
         <ul class="pagination">
             <li>
                 <a href="#" aria-label="Previous">
@@ -98,7 +98,7 @@
                 </a>
             </li>
         </ul>
-    </nav>
+    </nav>--%>
 </div>
 
 
@@ -127,7 +127,7 @@
     init();
 
     function load(key){
-        $("#tablelist").loadData({pageSize:15,currentPage:1,condition:{key:key}}).then(function(result){
+        $("#tablelist").loadData({pageSize:100,currentPage:1,condition:{key:key}}).then(function(result){
 
         });
     }
@@ -187,64 +187,6 @@
             }
         });
     });
-    /* $("#tablelist").loadData({pageSize:15,currentPage:1}).then(function(){
-         $("#accordion").on('click','a',function(){
-             var _this = $(this);
-             $.getJSON("/TableController/FieldList?table="+_this.data("table"),function(result){
-                 result.data.list.splice()
-                 var html = template("field", result.data);
-                 html="<table class=\"table table-bordered\" >\n" +
-                     "                                <tr>\n" +
-                     "                                    <th>Name</th>\n" +
-                     "                                    <th>JDBC Type</th>\n" +
-                     "                                    <th>JAVA Type</th>\n" +
-                     "                                    <th>Comment</th>\n" +
-                     "                                </tr>\n" +
-                     html +
-                     "                             </table>";
-                 $("#collapseOne"+_this.data("index")).find("div:first").html(html);
-             });
-         });*/
-
-      /*  $("#accordion").on("click",".general",function(e){
-            var _this = $(this);
-            e.stopPropagation();
-            e.preventDefault();
-            $("body").before(util.mask);
-            return;
-            var lefttable = {
-                table:{
-                    tableName:_this.closest("a").data("table")
-                }
-            }
-            $(this).btPost("/TableController/generalDao",lefttable,function (result) {
-                if(result.code==200){
-                    _this.addClass("success");
-                    var temp  = result.data.files;
-                    var files = "<ul class=\"list-group\">";
-                    for(var i in temp){
-                        var t  = temp[i];
-                        files +=  "<li class=\"list-group-item\"><span class=\"badge btn-primary\">"+t.extName+"</span>"+t.className+"</li>";
-                    }
-                    files+="</ul>";
-                    $(".modal-body").html(files);
-                    $("#myModal").modal("show");
-                    $("#download").unbind().click(function(){
-                        window.location.href = "/TableController/download/"+result.data.key;
-                        var i = 0;
-                        var inter  =  setInterval(function(){
-                            i+=5;
-                            $(".progress-bar").css("width",i + "%").text(i + "%");
-                            if(i==100){
-                                clearInterval(inter);
-                                $("#myModal").modal("hide");
-                            }
-                        },100);
-                    });
-                }
-            });
-        });
-    });*/
 </script>
 </body>
 </html>
