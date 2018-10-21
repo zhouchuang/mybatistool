@@ -140,10 +140,10 @@
             var html = template("field", result.data);
             html="<table class=\"table table-bordered\" >\n" +
                 "                                <tr>\n" +
-                "                                    <th>Name</th>\n" +
-                "                                    <th>JDBC Type</th>\n" +
-                "                                    <th>JAVA Type</th>\n" +
-                "                                    <th>Comment</th>\n" +
+                "                                    <th>字段名</th>\n" +
+                "                                    <th>字段类型</th>\n" +
+                "                                    <th>JAVA类型</th>\n" +
+                "                                    <th>注释</th>\n" +
                 "                                </tr>\n" +
                 html +
                 "                             </table>";
