@@ -40,7 +40,6 @@
             <div class="modal-footer">
                 <button type="button" id="download" class="btn btn-default" >下载
                 </button>
-                <button type="button" class="btn btn-primary">取消</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -65,7 +64,7 @@
 </div>
 
 
-<div class="container">
+<div class="row">
     <div class="btn-toolbar" role="toolbar" >
         <div class="btn-group" role="group" id="charPanel" >
         </div>
@@ -80,25 +79,6 @@
             {{/each}}
         </script>
     </ul>
-    <%--<nav aria-label="Page navigation">
-        <ul class="pagination">
-            <li>
-                <a href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            <li>
-                <a href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>--%>
 </div>
 
 

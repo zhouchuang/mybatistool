@@ -23,6 +23,7 @@ public class Column {
     private Integer decimalNum;
     private DataType dataType;
     private Boolean isBase;
+    private String importPath;
     public Column(DataType dataType,String name){
         this.dataType = dataType;
         this.name = name;
@@ -52,6 +53,7 @@ public class Column {
     public void setColumnType(String columnType) {
         try {
             this.type = getMapperdType(columnType);
+            this.importPath = obtainImportPath();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,10 +115,21 @@ public class Column {
                 return "Integer";
             }
         }
+
         throw new  Exception("没有找到对应类型："+str);
     }
 
 
+    private String obtainImportPath(){
+        if(this.type.equals("Date")){
+            return "java.util.Date";
+        }else if(this.type.equals("BigDecimal")){
+            return "java.math.BigDecimal";
+        }else {
+            return "";
+        }
+
+    }
     public void setColumnName(String columnName) {
         this.name = this.columnName = columnName;
         this.funName =  this.name.substring(0,1).toUpperCase()+this.name.substring(1);

@@ -7,9 +7,10 @@ import user.zchp.general.utils.AbstractDataResource;
 import user.zchp.general.utils.SpringResouceUtil;
 import user.zchp.general.utils.StringUtils;
 import user.zchp.utils.PageParam;
-import user.zchp.utils.QueryParam;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

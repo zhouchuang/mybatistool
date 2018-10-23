@@ -2,6 +2,7 @@ package ${packageName}.models;
 
 import ${packageName}.utils.BaseEntity;
 import lombok.Data;
+${importPath}
 
 //表名称 ${tableName}
 

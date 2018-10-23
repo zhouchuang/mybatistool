@@ -63,8 +63,9 @@ public abstract class AbstractDataResource implements DataResource {
         try {
             getStatement(connection).executeUpdate(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
+
             if(!e.getMessage().startsWith("Duplicate")){
+                e.printStackTrace();
                 connection  = reConnect(connection);
                 getResultSetByQuery(connection,sql);
             }
