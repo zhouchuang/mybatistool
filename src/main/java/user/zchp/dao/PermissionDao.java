@@ -4,6 +4,7 @@ import user.zchp.models.Permission;
 import user.zchp.utils.PageParam;
 import user.zchp.utils.QueryParam;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * @author:Administrator
  * @create 2018-01-19 18:12
  */
+@Resource
 public interface PermissionDao extends Dao{
     List<Permission> findMenuList();
     List<Permission> findPermissions(List<String> roles);

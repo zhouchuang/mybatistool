@@ -75,10 +75,12 @@
 
     <!-- 4.配置扫描Dao接口包，动态实现Dao接口，注入到spring容器中 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--需要加上注解才能生成-->
+        <property name="annotationClass" value="javax.annotation.Resource"/>
         <!-- 注入sqlSessionFactory -->
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
         <!-- 给出需要扫描Dao接口包 -->
-        <property name="basePackage" value="user.zchp.dao"/>
+        <property name="basePackage" value="user.zchp.dao,user.zchp.dao.ext"/>
     </bean>
 
     <!-- 上面的druid的配置 -->

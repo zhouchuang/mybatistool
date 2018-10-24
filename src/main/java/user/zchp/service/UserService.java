@@ -7,6 +7,7 @@ import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import user.zchp.dao.UserDao;
+import user.zchp.dao.ext.UserExtDao;
 import user.zchp.models.Permission;
 import user.zchp.models.Role;
 import user.zchp.models.User;
@@ -31,6 +32,8 @@ public class UserService extends AbstractService {
     @Autowired
     private UserDao userDao;
     @Autowired
+    private UserExtDao userExtDao;
+    @Autowired
     private PermissionService permissionService;
     @Autowired
     private RoleService roleService;
@@ -42,12 +45,16 @@ public class UserService extends AbstractService {
 
 
 
+    public List<User> findExtList(){
+        return  this.userExtDao.findExtList();
+    }
 
     public User getByAccountNo(String accountNo){
         return getDao().getByAccountNo(accountNo);
     }
 
     public AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) throws Exception {
+
         User authUser = (User) principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         User user = this.getByAccountNo(authUser.getAccountNo());

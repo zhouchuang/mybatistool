@@ -1,1 +1,1 @@
-package user.zchp.dao;public interface SearchlogDao extends Dao {}
+package user.zchp.dao;import javax.annotation.Resource;@Resourcepublic interface SearchlogDao extends Dao {}

@@ -3,6 +3,7 @@ package user.zchp.dao;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import java.util.Map;
  * @author zhouchuang
  * @create 2018-05-12 14:43
  */
+@Resource
 public interface TableDao extends Dao {
 
 

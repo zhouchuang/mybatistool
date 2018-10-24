@@ -9,6 +9,8 @@ import user.zchp.models.User;
 import user.zchp.service.UserService;
 import user.zchp.utils.QueryParam;
 
+import java.util.List;
+
 
 /**
  * job权限验证
@@ -44,6 +46,8 @@ public class JobShiroRealm extends AuthorizingRealm {
         User user = null;
         try {
             user = userService.one(new QueryParam("accountNo",token.getUsername()));
+            List<User> userList = userService.findExtList();
+            System.out.println(userList.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
