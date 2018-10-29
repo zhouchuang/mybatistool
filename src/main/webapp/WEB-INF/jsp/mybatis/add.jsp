@@ -44,13 +44,29 @@
             <div class="panel-heading">
                 <h3 class="panel-title" id="title">请选择表后再选择关联列</h3>
             </div>
-            <div class="panel-body"  style="height: 90%">
-                <ul class="list-group col-md-6" id="tables" style="height: 90%">
+            <div class="btn-group" role="group" id="charPanel" >
+            </div>
+            <div class="panel-body"  style="height: 80%">
 
-                </ul>
-                <ul class="list-group col-md-6" id="fields" style="height: 90%">
+                <div class="list-group col-md-6">
+                    <ul id="tableUl"  style="height:100%;overflow:scroll">
+                        <script  id="tables"  type="text/html"  data-url="/TableController/TableListDetail">
+                            {{each list as table index}}
+                            <li class="list-group-item" data-table="{{table.name}}" data-file="{{table.status==true?1:0}}">
+                                <span  class="badge general {{table.status==1?'success':'noexist' }}">{{table.status==0?'未生成':'已生成'}}</span>
+                                <span >{{table.name}}</span>
+                            </li>
+                            {{/each}}
+                        </script>
+                    </ul>
+                </div>
 
-                </ul>
+                <div class="list-group col-md-6"  >
+                    <ul id="fields"  style="height:100%;overflow:scroll">
+
+                    </ul>
+                </div>
+
             </div>
         </div>
 
@@ -87,12 +103,106 @@
     </div><!-- /.modal -->
 </div>
 <script>
-    var tablelist = [];
+
+
     var tabletemplate = "<li class=\"tablename\" ><input type=\"checkbox\" value=\"@{name}\" data-id=\"@{id}\" data-status=\"@{status}\" data-ref=\"@{ref}\"  ><label >@{name}</label><span class=\"badge  @{filestatus}\">@{file}</span></li>";
     var fieldtemplate = "<li><input type=\"checkbox\" value=\"@{name}\" ><label style='color:#909090'>@{name}</label></li>";
+    var html = "";
+    var table = "";
+    var file;
+    var id = "";
+    var refId = "";
+    var appendDom;
+    var comp;
+    function  init(){
+
+
+
+        for(var i=0;i<26;i++){
+            $("#charPanel").append("<button type=\"button\" class=\"btn btn-default\">"+String.fromCharCode(0x60+i+1)+"</button>");
+        }
+        $("#charPanel").on('click','button',function(){
+            $("#fields").empty();
+            load($(this).text());
+        });
+        $("#tableUl").on('click','li',function () {
+
+            $("#tableUl li").removeClass("active");
+            $(this).addClass("active");
+            var _this = $(this);
+            table = $(this).data("table");
+            file = $(this).data("file")==1?true:false;
+            $.getJSON("/TableController/FieldList?table="+table,function (result) {
+                var data = result.data.list;
+                var status = result.data.status;
+                var fieldhtml = "";
+                html = "";
+                for(var i in data){
+                    var obj = data[i];
+                    obj.remarks = obj.remarks||"";
+                    obj.remarks = obj.remarks.substring(0,Math.min(10,obj.remarks.length));
+                    fieldhtml +=  "<li class=\"list-group-item\">"+obj.columnName+"<span class='badge'>"+obj.remarks+"</span></li>";
+                    html  += fieldtemplate.replace("@{name}",obj.columnName).replace("@{name}",obj.columnName);
+                }
+                $("#fields").html(fieldhtml);
+                $("#fields").off("click");
+                $("#fields").on('click','li',function(){
+                    refId = $(this).text();
+                    var lihtml  =  tabletemplate.replace("@{name}",table)
+                        .replace("@{name}",util.getFirstUp(table))
+                        .replace("@{id}",id)
+                        .replace("@{ref}",refId)
+                        .replace("@{status}",status)
+                        .replace("@{file}",file==true?"已生成":"未生成")
+                        .replace("@{filestatus}",file==true?"success":"");
+                    appendDom.append(lihtml+"<ul>"+html+"</ul>");
+                    initTree();
+                });
+            });
+        });
+
+        $("#fields").on('click','li',function(){
+            refId = $(this).text();
+            var lihtml  =  tabletemplate.replace("@{name}",table)
+            //.replace("@{name}",(util.getFirstUp(table)+(status==true?"<span class=\"glyphicon glyphicon-th-list\" aria-hidden=\"true\"></span>":"")))
+                .replace("@{name}",util.getFirstUp(table))
+                .replace("@{id}",id)
+                .replace("@{ref}",refId)
+                .replace("@{status}",status)
+                .replace("@{file}",file==true?"已生成":"未生成")
+                .replace("@{filestatus}",file==true?"success":"");
+            appendDom.append(lihtml+"<ul>"+html+"</ul>");
+            initTree();
+        });
+
+
+        load('a');
+    }
+    //加载行
+    function load(key){
+        $("#tables").loadData({pageSize:100,currentPage:1,condition:{key:key}}).then(function(result){
+
+        });
+    }
+    init();
+
+
+
+    var tablelist = [];
     $('#add').click(function(){
-        addTable();
+        //addTable();
+        load('a');
     });
+
+    function load(key){
+        initSelectTable();
+        $("#tables").loadData({pageSize:100,currentPage:1,condition:{key:key}}).then(function(result){
+
+        });
+    }
+
+
+
 
     function addTable(comp){
         var last = comp||$("#tree input:checked").last();
@@ -100,7 +210,6 @@
         var id ;
         var refId;
         if(last==undefined || last.length==0){
-//            $("#title").text("请选择关联id后点击添加");
             bttool.alert("请选择关联id后点击添加");
         }else{
             id = last.val();
@@ -109,10 +218,11 @@
         }
         new Promise(function(callback){
             if(tablelist.length==0) {
-                $.getJSON("/TableController/TableList",function(data){
+                $.getJSON("/TableController/TableListDetail",function(data){
                     tablelist = [].concat(data.data);
                     callback(tablelist);
                 });
+                load();
             }else{
                 callback(tablelist);
             }
@@ -175,8 +285,23 @@
     });
 
     $("#tree").on('change','input:checked',function(){
-        addTable($(this));
+        comp = $(this);
+//        addTable($(this));
+        load('a');
     });
+
+    function initSelectTable(){
+        var last = comp||$("#tree input:checked").last();
+        appendDom  = $("#tree") ;
+        if(last==undefined || last.length==0){
+            //bttool.alert("请选择关联id后点击添加");
+        }else{
+            id = last.val();
+            appendDom = last.closest("ul");
+            $("#title").text("关联对象 "+last.closest("ul").prev().text()+"("+last.val()+")");
+        }
+
+    }
     
     $("#gen").click(function () {
         var firsttables =  $("#tree>li[class='tablename']");
