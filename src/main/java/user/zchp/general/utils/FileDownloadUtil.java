@@ -32,7 +32,7 @@ public class FileDownloadUtil {
 
 
     public static ResponseEntity<byte[]> download(List<TemplateInfo> paths)throws Exception{
-        File file = new File("C:/javatemp");
+        File file = new File("D:/javatemp");
         if(file.exists()){
             delFolder(file.getPath());
         }

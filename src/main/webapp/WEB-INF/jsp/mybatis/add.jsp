@@ -36,6 +36,9 @@
 <div class="container" style="margin-top: 20px;height: 90%;overflow-y: auto">
     <ul id="tree" style="margin-left: 15px;">
     </ul>
+    <panel>
+        hellow
+    </panel>
 </div>
 
 <div id="tablepanel" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
@@ -105,12 +108,13 @@
 <script>
 
 
-    var tabletemplate = "<li class=\"tablename\" ><input type=\"checkbox\" value=\"@{name}\" data-id=\"@{id}\" data-status=\"@{status}\" data-ref=\"@{ref}\"  ><label >@{name}</label><span class=\"badge  @{filestatus}\">@{file}</span></li>";
-    var fieldtemplate = "<li><input type=\"checkbox\" value=\"@{name}\" ><label style='color:#909090'>@{name}</label></li>";
+    var tabletemplate = "<li class=\"tablename\" ><input type=\"checkbox\" value=\"@{name}\" data-id=\"@{id}\" data-status=\"@{status}\" data-ref=\"@{ref}\"  ><label >@{name}</label><span class=\"badge\">@{file}</span></li>";
+    var fieldtemplate = "<li ><input type=\"checkbox\" value=\"@{name}\" ><label style='color:#909090'>@{name}</label></li>";
     var html = "";
     var table = "";
     var file;
     var id = "";
+    var tableName = "";
     var refId = "";
     var appendDom;
     var comp;
@@ -141,20 +145,21 @@
                     var obj = data[i];
                     obj.remarks = obj.remarks||"";
                     obj.remarks = obj.remarks.substring(0,Math.min(10,obj.remarks.length));
-                    fieldhtml +=  "<li class=\"list-group-item\">"+obj.columnName+"<span class='badge'>"+obj.remarks+"</span></li>";
+                    fieldhtml +=  "<li class=\"list-group-item\"><span class=\"refID\">"+obj.columnName+"</span><span class='badge'>"+obj.remarks+"</span></li>";
                     html  += fieldtemplate.replace("@{name}",obj.columnName).replace("@{name}",obj.columnName);
                 }
                 $("#fields").html(fieldhtml);
                 $("#fields").off("click");
                 $("#fields").on('click','li',function(){
-                    refId = $(this).text();
+                    refId = $(this).children(".refID").text();
                     var lihtml  =  tabletemplate.replace("@{name}",table)
                         .replace("@{name}",util.getFirstUp(table))
                         .replace("@{id}",id)
                         .replace("@{ref}",refId)
                         .replace("@{status}",status)
-                        .replace("@{file}",file==true?"已生成":"未生成")
-                        .replace("@{filestatus}",file==true?"success":"");
+//                        .replace("@{file}",file==true?"已生成":"未生成")
+                        .replace("@{file}","on "+(tableName||"root")+"."+id+"="+table+"."+refId);
+//                        .replace("@{filestatus}",file==true?"success":"");
                     appendDom.append(lihtml+"<ul>"+html+"</ul>");
                     initTree();
                 });
@@ -204,7 +209,7 @@
 
 
 
-    function addTable(comp){
+  /*  function addTable(comp){
         var last = comp||$("#tree input:checked").last();
         var appendDom  = $("#tree") ;
         var id ;
@@ -268,7 +273,7 @@
                 });
             });
         });
-    }
+    }*/
     function initTree(){
         $("#tablepanel").modal('hide');
         $("#tree input:checked").prop("checked",false);
@@ -281,7 +286,12 @@
     });
     
     $("#tree").on('click',"li[class='tablename']",function () {
-        $(this).next().toggleClass("hide",1000);
+//        $(this).next().toggleClass("hide",1000);
+        if($(this).next().children(0).css("display")!="none"){
+            $(this).next().children("li[class!='tablename']").hide();
+        }else{
+            $(this).next().children("li[class!='tablename']").show();
+        }
     });
 
     $("#tree").on('change','input:checked',function(){
@@ -298,6 +308,7 @@
         }else{
             id = last.val();
             appendDom = last.closest("ul");
+            tableName = appendDom.prev().find("input").val();
             $("#title").text("关联对象 "+last.closest("ul").prev().text()+"("+last.val()+")");
         }
 
