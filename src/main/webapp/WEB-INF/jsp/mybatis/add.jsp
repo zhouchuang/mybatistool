@@ -24,6 +24,10 @@
     label{
         margin-right: 5px;
     }
+    .xdirection{
+        /*list-style: none;*/
+        float: left;
+    }
 </style>
 
 
@@ -36,9 +40,9 @@
 <div class="container" style="margin-top: 20px;height: 90%;overflow-y: auto">
     <ul id="tree" style="margin-left: 15px;">
     </ul>
-    <panel>
-        hellow
-    </panel>
+    <div id="sql"style="background-color: #3c3c3c;color:white;height: 30%;width: 80%">
+
+    </div>
 </div>
 
 <div id="tablepanel" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
@@ -109,7 +113,7 @@
 
 
     var tabletemplate = "<li class=\"tablename\" ><input type=\"checkbox\" value=\"@{name}\" data-id=\"@{id}\" data-status=\"@{status}\" data-ref=\"@{ref}\"  ><label >@{name}</label><span class=\"badge\">@{file}</span></li>";
-    var fieldtemplate = "<li ><input type=\"checkbox\" value=\"@{name}\" ><label style='color:#909090'>@{name}</label></li>";
+    var fieldtemplate = "<li class=\"xdirection\"><input type=\"checkbox\" value=\"@{name}\" ><label style='color:#909090'>@{name}</label></li>";
     var html = "";
     var table = "";
     var file;
@@ -158,7 +162,7 @@
                         .replace("@{ref}",refId)
                         .replace("@{status}",status)
 //                        .replace("@{file}",file==true?"已生成":"未生成")
-                        .replace("@{file}","on "+(tableName||"root")+"."+id+"="+table+"."+refId);
+                        .replace("@{file}","on "+(tableName||"from")+"."+id+"="+table+"."+refId);
 //                        .replace("@{filestatus}",file==true?"success":"");
                     appendDom.append(lihtml+"<ul>"+html+"</ul>");
                     initTree();
@@ -166,7 +170,7 @@
             });
         });
 
-        $("#fields").on('click','li',function(){
+      /*  $("#fields").on('click','li',function(){
             refId = $(this).text();
             var lihtml  =  tabletemplate.replace("@{name}",table)
             //.replace("@{name}",(util.getFirstUp(table)+(status==true?"<span class=\"glyphicon glyphicon-th-list\" aria-hidden=\"true\"></span>":"")))
@@ -179,7 +183,7 @@
             appendDom.append(lihtml+"<ul>"+html+"</ul>");
             initTree();
         });
-
+*/
 
         load('a');
     }

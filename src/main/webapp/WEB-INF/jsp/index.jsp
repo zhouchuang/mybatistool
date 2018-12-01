@@ -28,7 +28,6 @@
     </style>
     <script>
         $(document).ready(function(e) {
-            var counter = 0;
             if (window.history && window.history.pushState) {
                 $(window).on('popstate', function () {
                     window.history.pushState('forward', null, '#');
@@ -44,7 +43,7 @@
 </head>
 <body >
 <div id="alertPanel" class="alert alert-warning alert-dismissible" role="alert" style="display: none;position: fixed;z-index: 999;width: 100%;top: 0px;">
-    <strong>警告!</strong><span><span>
+    <strong>警告!</strong><span></span>
 </div>
 <div class="row" style="width: 90%;margin:10px auto;">
     <div class="col-md-3">
