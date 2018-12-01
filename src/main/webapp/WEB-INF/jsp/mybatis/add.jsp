@@ -25,14 +25,24 @@
         margin-right: 5px;
     }
     .xdirection{
-        /*list-style: none;*/
-        float: left;
+        display:inline-block;
     }
+    .xdirection ul li{
+        float: left;
+        margin-left: 10px;
+    }
+    .code{
+        width: 100%;
+        height: 100px;
+    }
+
 </style>
 
 
 <div class="container-fluid" style="padding-left: 0px;!important;" >
+<%--
     <button type="button" id="add" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-lg">新增</button>
+--%>
     <button type="button" id="del" class="btn btn-danger">删除</button>
     <button type="button" id="gen" class="btn btn-primary" data-url="/TableController/generalDao">生成</button>
 </div>
@@ -40,8 +50,10 @@
 <div class="container" style="margin-top: 20px;height: 90%;overflow-y: auto">
     <ul id="tree" style="margin-left: 15px;">
     </ul>
-    <div id="sql"style="background-color: #3c3c3c;color:white;height: 30%;width: 80%">
-
+    <div id="sql"style="background-color: #3c3c3c;color:black;height: auto;width: 80%" class="row">
+        <textarea class="code" id="select">select </textarea>
+        <textarea class="code"  id="from"></textarea>
+        <textarea class="code"  id="where">where 1=1 </textarea>
     </div>
 </div>
 
@@ -112,8 +124,9 @@
 <script>
 
 
+    var selectmap =  {};
     var tabletemplate = "<li class=\"tablename\" ><input type=\"checkbox\" value=\"@{name}\" data-id=\"@{id}\" data-status=\"@{status}\" data-ref=\"@{ref}\"  ><label >@{name}</label><span class=\"badge\">@{file}</span></li>";
-    var fieldtemplate = "<li class=\"xdirection\"><input type=\"checkbox\" value=\"@{name}\" ><label style='color:#909090'>@{name}</label></li>";
+    var fieldtemplate = "<li><input type=\"checkbox\" value=\"@{name}\" ><label style='color:#909090'>@{name}</label></li>";
     var html = "";
     var table = "";
     var file;
@@ -156,16 +169,23 @@
                 $("#fields").off("click");
                 $("#fields").on('click','li',function(){
                     refId = $(this).children(".refID").text();
+                    var sql ;
+                    if(!tableName){
+                        sql  = "from  "+table +" "+table;
+                    }else{
+                        sql  = "left join "+table+" on "+tableName+"."+id+" = "+table+"."+refId;
+                    }
                     var lihtml  =  tabletemplate.replace("@{name}",table)
                         .replace("@{name}",util.getFirstUp(table))
                         .replace("@{id}",id)
                         .replace("@{ref}",refId)
                         .replace("@{status}",status)
 //                        .replace("@{file}",file==true?"已生成":"未生成")
-                        .replace("@{file}","on "+(tableName||"from")+"."+id+"="+table+"."+refId);
+                        .replace("@{file}",sql);
 //                        .replace("@{filestatus}",file==true?"success":"");
-                    appendDom.append(lihtml+"<ul>"+html+"</ul>");
+                    appendDom.append(lihtml+"<li class=\"fieldsNode\"><ul class=\"appendNode\"><li class=\"xdirection\"><ul>"+html+"</ul></li></ul></li>");
                     initTree();
+                    appendSql("#from",sql);
                 });
             });
         });
@@ -188,19 +208,13 @@
         load('a');
     }
     //加载行
-    function load(key){
-        $("#tables").loadData({pageSize:100,currentPage:1,condition:{key:key}}).then(function(result){
-
-        });
-    }
     init();
 
 
 
     var tablelist = [];
     $('#add').click(function(){
-        //addTable();
-        load('a');
+        //load('a');
     });
 
     function load(key){
@@ -278,6 +292,11 @@
             });
         });
     }*/
+
+    function  appendSql(eleID,sql){
+        var panel = $(eleID);
+        panel.html(panel.html()+" "+ sql);
+    }
     function initTree(){
         $("#tablepanel").modal('hide');
         $("#tree input:checked").prop("checked",false);
@@ -290,29 +309,40 @@
     });
     
     $("#tree").on('click',"li[class='tablename']",function () {
-//        $(this).next().toggleClass("hide",1000);
-        if($(this).next().children(0).css("display")!="none"){
-            $(this).next().children("li[class!='tablename']").hide();
+        if($(this).next().find(".xdirection").css("display")!="none"){
+            $(this).next().find(".xdirection:first").hide();
         }else{
-            $(this).next().children("li[class!='tablename']").show();
+            $(this).next().find(".xdirection:first").show();
         }
     });
 
-    $("#tree").on('change','input:checked',function(){
-        comp = $(this);
-//        addTable($(this));
-        load('a');
+    $("#tree").on('change','input',function(){
+        var ctn = $(this).closest(".fieldsNode").prev().find("input").val();
+        var ct = selectmap[ctn]||[];
+        if($(this).is(":checked")) {
+            ct.push($(this).val());
+        }else{
+            //删除
+        }
+        selectmap[ctn] = ct;
     });
 
+    $("#tree").on('dblclick','label',function(){
+        comp = $(this).prev();
+        load('a');
+    })
+
     function initSelectTable(){
+        $(".bs-example-modal-lg").modal("show");
         var last = comp||$("#tree input:checked").last();
         appendDom  = $("#tree") ;
         if(last==undefined || last.length==0){
             //bttool.alert("请选择关联id后点击添加");
         }else{
             id = last.val();
-            appendDom = last.closest("ul");
+            appendDom = last.closest(".fieldsNode");
             tableName = appendDom.prev().find("input").val();
+            appendDom = appendDom.find(".appendNode");
             $("#title").text("关联对象 "+last.closest("ul").prev().text()+"("+last.val()+")");
         }
 
