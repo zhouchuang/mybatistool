@@ -23,6 +23,9 @@
     }
     label{
         margin-right: 5px;
+        -moz-user-select:none;
+        -webkit-user-select:none;
+        user-select:none;
     }
     .xdirection{
         display:inline-block;
@@ -34,6 +37,15 @@
     .code{
         width: 100%;
         height: 100px;
+    }
+    .where{
+        color:#1E90FF;
+    }
+    .nowhere{
+        color:#909090;
+    }
+    .tablename label{
+        color: #119824
     }
 
 </style>
@@ -50,10 +62,10 @@
 <div class="container" style="margin-top: 20px;height: 90%;overflow-y: auto">
     <ul id="tree" style="margin-left: 15px;">
     </ul>
-    <div id="sql"style="background-color: #3c3c3c;color:black;height: auto;width: 80%" class="row">
-        <textarea class="code" id="select">select </textarea>
-        <textarea class="code"  id="from"></textarea>
-        <textarea class="code"  id="where">where 1=1 </textarea>
+    <div id="sql"style="background-color: #3c3c3c;color:black;height: auto;width:95%" class="row">
+        <textarea class="code" id="select" style="color: #0f0f0f">select </textarea>
+        <textarea class="code"  id="from" style="color: #119824"></textarea>
+        <textarea class="code"  id="where" style="color:#1E90FF;">where 1=1 </textarea>
     </div>
 </div>
 
@@ -122,11 +134,15 @@
     </div><!-- /.modal -->
 </div>
 <script>
-
+    $(document).ready(function(){
+        $(document).bind("contextmenu",function(e){
+            return false;
+        });
+    });
 
     var selectmap =  {};
     var tabletemplate = "<li class=\"tablename\" ><input type=\"checkbox\" value=\"@{name}\" data-id=\"@{id}\" data-status=\"@{status}\" data-ref=\"@{ref}\"  ><label >@{name}</label><span class=\"badge\">@{file}</span></li>";
-    var fieldtemplate = "<li><input type=\"checkbox\" value=\"@{name}\" ><label style='color:#909090'>@{name}</label></li>";
+    var fieldtemplate = "<li><input type=\"checkbox\" value=\"@{name}\" ><label class=\"nowhere\">@{name}</label></li>";
     var html = "";
     var table = "";
     var file;
@@ -135,6 +151,7 @@
     var refId = "";
     var appendDom;
     var comp;
+    var rootTable = "";
     function  init(){
 
 
@@ -171,6 +188,7 @@
                     refId = $(this).children(".refID").text();
                     var sql ;
                     if(!tableName){
+                        rootTable = table;
                         sql  = "from  "+table +" "+table;
                     }else{
                         sql  = "left join "+table+" on "+tableName+"."+id+" = "+table+"."+refId;
@@ -180,9 +198,7 @@
                         .replace("@{id}",id)
                         .replace("@{ref}",refId)
                         .replace("@{status}",status)
-//                        .replace("@{file}",file==true?"已生成":"未生成")
                         .replace("@{file}",sql);
-//                        .replace("@{filestatus}",file==true?"success":"");
                     appendDom.append(lihtml+"<li class=\"fieldsNode\"><ul class=\"appendNode\"><li class=\"xdirection\"><ul>"+html+"</ul></li></ul></li>");
                     initTree();
                     appendSql("#from",sql);
@@ -190,32 +206,11 @@
             });
         });
 
-      /*  $("#fields").on('click','li',function(){
-            refId = $(this).text();
-            var lihtml  =  tabletemplate.replace("@{name}",table)
-            //.replace("@{name}",(util.getFirstUp(table)+(status==true?"<span class=\"glyphicon glyphicon-th-list\" aria-hidden=\"true\"></span>":"")))
-                .replace("@{name}",util.getFirstUp(table))
-                .replace("@{id}",id)
-                .replace("@{ref}",refId)
-                .replace("@{status}",status)
-                .replace("@{file}",file==true?"已生成":"未生成")
-                .replace("@{filestatus}",file==true?"success":"");
-            appendDom.append(lihtml+"<ul>"+html+"</ul>");
-            initTree();
-        });
-*/
 
         load('a');
     }
     //加载行
     init();
-
-
-
-    var tablelist = [];
-    $('#add').click(function(){
-        //load('a');
-    });
 
     function load(key){
         initSelectTable();
@@ -224,82 +219,12 @@
         });
     }
 
-
-
-
-  /*  function addTable(comp){
-        var last = comp||$("#tree input:checked").last();
-        var appendDom  = $("#tree") ;
-        var id ;
-        var refId;
-        if(last==undefined || last.length==0){
-            bttool.alert("请选择关联id后点击添加");
-        }else{
-            id = last.val();
-            appendDom = last.closest("ul");
-            $("#title").text("关联对象 "+last.closest("ul").prev().text()+"("+last.val()+")");
-        }
-        new Promise(function(callback){
-            if(tablelist.length==0) {
-                $.getJSON("/TableController/TableListDetail",function(data){
-                    tablelist = [].concat(data.data);
-                    callback(tablelist);
-                });
-                load();
-            }else{
-                callback(tablelist);
-            }
-        }).then(function(result){
-            var html = "";
-            for(var i in result){
-                var obj = result[i];
-                for(var key in obj){
-                    html += "<li data-name=\""+key+"\" data-file=\""+obj[key]+"\" class=\"list-group-item\"><span class=\"badge"+(obj[key]==true?" success":"")+"\" >"+(obj[key]==true?"已生成":"未生成")+"</span>"+key+"</li>";
-                }
-            }
-            $("#tables").html(html);
-        }).then(function () {
-            $("#tables").on('click','li',function () {
-                var _this = $(this);
-                var table = $(this).data("name");
-                var file = $(this).data("file");
-                $.getJSON("/TableController/FieldList?table="+table,function (result) {
-                    var data = result.data.list;
-                    var status = result.data.status;
-                    var fieldhtml = "";
-                    var html = "";
-                    for(var i in data){
-                        var obj = data[i];
-                        fieldhtml +=  "<li class=\"list-group-item\">"+obj.columnName+"</li>";
-                        html  += fieldtemplate.replace("@{name}",obj.columnName).replace("@{name}",obj.columnName);
-                    }
-                    $("#fields").html(fieldhtml);
-                    $("#fields").off("click");
-                    $("#fields").on('click','li',function(){
-                        refId = $(this).text();
-                        var lihtml  =  tabletemplate.replace("@{name}",table)
-                            //.replace("@{name}",(util.getFirstUp(table)+(status==true?"<span class=\"glyphicon glyphicon-th-list\" aria-hidden=\"true\"></span>":"")))
-                            .replace("@{name}",util.getFirstUp(table))
-                            .replace("@{id}",id)
-                            .replace("@{ref}",refId)
-                            .replace("@{status}",status)
-                            .replace("@{file}",file==true?"已生成":"未生成")
-                            .replace("@{filestatus}",file==true?"success":"");
-                        appendDom.append(lihtml+"<ul>"+html+"</ul>");
-                        initTree();
-                    });
-                });
-            });
-        });
-    }*/
-
     function  appendSql(eleID,sql){
         var panel = $(eleID);
         panel.html(panel.html()+" "+ sql);
     }
     function initTree(){
         $("#tablepanel").modal('hide');
-        $("#tree input:checked").prop("checked",false);
     }
 
     $("#del").click(function(){
@@ -308,29 +233,61 @@
        });
     });
     
-    $("#tree").on('click',"li[class='tablename']",function () {
-        if($(this).next().find(".xdirection").css("display")!="none"){
-            $(this).next().find(".xdirection:first").hide();
+    $("#tree").on('click',"li[class='tablename'] label",function () {
+        if($(this).parent().next().find(".xdirection").css("display")!="none"){
+            $(this).parent().next().find(".xdirection:first").hide();
         }else{
-            $(this).next().find(".xdirection:first").show();
+            $(this).parent().next().find(".xdirection:first").show();
         }
     });
 
-    $("#tree").on('change','input',function(){
-        var ctn = $(this).closest(".fieldsNode").prev().find("input").val();
-        var ct = selectmap[ctn]||[];
-        if($(this).is(":checked")) {
-            ct.push($(this).val());
-        }else{
-            //删除
-        }
-        selectmap[ctn] = ct;
+    $("#tree").on('change','li[class^="tablename"] input',function () {
+        var ischeck = $(this).is(":checked");
+        $(this).parent().next().find(".xdirection input").prop("checked",ischeck);
+        appendField($(this).val(),$(this).parent().next().find(".xdirection ul"));
     });
+
+    $("#tree").on('change','li[class!="tablename"] input',function(){
+        var ctn = $(this).closest(".fieldsNode").prev().find("input").val();
+        appendField(ctn,$(this).closest("ul"));
+    });
+
+    function appendField(ctn,_this){
+        var arr =[];
+        _this.find("input:checked").each(function(i,item){
+            arr.push($(item).val());
+        });
+        selectmap[ctn] = arr;
+        var sql  ="select now()";
+        for(var i in selectmap){
+            var fields  = selectmap[i];
+            for(var j in fields){
+                sql += ","+i+"."+fields[j] + (rootTable==i?"":(" as '"+util.getFirstUp(i.split("_")[i.split("_").length-1])+fields[j]+"'"));
+            }
+        }
+        $("#select").html(sql);
+    }
 
     $("#tree").on('dblclick','label',function(){
         comp = $(this).prev();
         load('a');
     })
+
+    $("#tree").on('mousedown','li[class!="tablename"] label',function(e){
+        if(e.which==1){  //左键
+            $(this).prev().click();
+        }else{
+            if($(this).hasClass("nowhere")){
+                $(this).removeClass("nowhere").addClass("where");
+            }else{
+                $(this).removeClass("where").addClass("nowhere");
+            }
+            var field = $(this).prev().val();
+            appendSql("#where","<if test=\"condition."+field+"!=null\"> and "+field+" = \#{condition."+field+"}</if>");
+        }
+    })
+
+
 
     function initSelectTable(){
         $(".bs-example-modal-lg").modal("show");
