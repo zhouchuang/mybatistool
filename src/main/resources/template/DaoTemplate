@@ -4,7 +4,9 @@ package ${packageName}.dao;
 import java.util.HashMap;
 import java.util.List;
 import ${packageName}.utils.PageParam;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface ${className}Dao extends Dao {
 
 }
