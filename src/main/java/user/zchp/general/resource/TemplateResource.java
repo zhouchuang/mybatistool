@@ -27,7 +27,7 @@ public class TemplateResource implements FileResource {
         BufferedReader br = new BufferedReader(isr);
         String s;
         while ((s = br.readLine()) != null) {
-            sb.append(s + "\n\r");
+            sb.append(s + "\n");
         }
         br.close();
         isr.close();

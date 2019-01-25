@@ -25,9 +25,9 @@ public class DemoTableProcess implements TableProcess {
             .addDefaultColumn(new Column(DataType.Date,"createTime"))
             .addDefaultColumn(new Column(DataType.Date,"updateTime"))
             .addDefaultColumn(new Column(DataType.Boolean,"isDeleted"))
-            .setPk(new Column(DataType.String,"id"))
+            .setPk(new Column(DataType.Integer,"id"))
             .setVersion(new Column(DataType.Integer,"version"))
-            .setBasePackage("user.zc")
+            .setBasePackage("com.yskj.yzx")
             .setBasePath("C:/mybatistool");
 
     @Override

@@ -1,6 +1,6 @@
 package ${packageName}.models;
 
-import ${packageName}.utils.BaseEntity;
+import ${packageName}.models.base.BaseEntity;
 import lombok.Data;
 ${importPath}
 

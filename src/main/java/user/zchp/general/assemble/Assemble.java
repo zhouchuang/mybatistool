@@ -11,6 +11,6 @@ import user.zchp.general.component.TemplateInfo;
  */
 public interface Assemble {
     String space = "    ";
-    String newLine = "\n\r";
+    String newLine = "\n";
     TemplateInfo process(ClassModel classModel);
 }
